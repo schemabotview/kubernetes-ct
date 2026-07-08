@@ -1,0 +1,19 @@
+Getting a local cluster.
+
+You only learn kubernetes by running pods, and for that you need a cluster. There are four good options, ordered roughly by simplicity.
+
+Option one is kind, which stands for kubernetes in docker. It is a single binary that spins up a fresh cluster by running each kubernetes node as a docker container. It boots in under a minute and it is easy to reset. You install it, then use kind create cluster to make a single node cluster, and kind delete cluster to wipe it. It is the fastest to start, multi node works, and it is used heavily in continuous integration. The nodes are containers rather than virtual machines, which is perfectly fine for learning.
+
+Option two is minikube. It is the veteran tool. It runs a single node cluster inside a virtual machine or a container, and it has add ons you can enable, like an ingress controller. It is very forgiving, but a little slower to boot than kind.
+
+Option three is docker desktop's bundled kubernetes. If you already run docker desktop, there is a checkbox in settings labelled enable kubernetes. Tick it and wait a few minutes. Zero new installs, though it is not always the latest kubernetes version.
+
+Option four is kube-adm on virtual machines. This is the real install. You bring up several linux machines, run kube-adm in-it on one, and kube-adm join on the others. It matches production exactly, and it is what the see-kay-ay exam expects. We do this end to end in notebook eight. It is the heaviest setup, so it is not where you start on day one.
+
+For notebooks one through seven, use kind. It is the lightest path to a working cluster.
+
+Whichever option you pick, you also need kubectl, the command line client that talks to the cluster. You install it with your package manager.
+
+Then three commands tell you the cluster is healthy. Kubectl version shows the client and server versions. If you see both, kubectl can reach the ay-pee-eye server. Kubectl cluster info prints the address of the ay-pee-eye server. And kubectl get nodes lists the nodes. With kind, you will see one node named learn control plane.
+
+On our map, spinning up a cluster is standing up that whole cluster column locally. One node that is both the control plane and a worker at the same time.

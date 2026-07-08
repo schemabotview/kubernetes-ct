@@ -1,0 +1,20 @@
+# Scheduling — Resources, Affinity, Taints
+
+A new Pod sits `Pending` with no node. **`kube-scheduler`** picks one. This module = **the inputs that bias that choice.**
+
+## The scheduler loop
+
+```
+filter (could run?) → score (best fit?) → bind (spec.nodeName)
+```
+
+## The knobs
+
+- **requests / limits** — reserve (filter) + cap (runtime) + **QoS** (eviction order)
+- **`nodeSelector` / node affinity** — *"this kind of node"*
+- **pod (anti-)affinity / spread** — *"near / away from these Pods"*
+- **taints / tolerations** — *"stay away unless opted in"* (node-side)
+- **PriorityClass / preemption** — *"kick others out"*
+- **LimitRange / ResourceQuota** — multi-team governance
+
+> Scheduler **decides**, kubelet **runs**. Lives in the **Scheduling** box → the **kube-scheduler**.

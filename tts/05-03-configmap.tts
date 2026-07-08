@@ -1,0 +1,11 @@
+The config map, as an object.
+
+A config map is a namespace scoped key value store of configuration, that pods reference by name. The values can be short strings, or whole files.
+
+A config map has two sections under the top level. The data section holds string values. The keys are arbitrary, and the values are you-tee-eff-eight strings, no binary. Nearly every config map you ever write lives here. And the binary data section holds base sixty-four encoded blobs, for things that are not strings, like a keystore or an image. That one is less common.
+
+Here is the key idea. A config map is just data. It has no spec, and no status. There is nothing for a controller to reconcile. The cluster does absolutely nothing with a config map until a pod references it. That is the difference from every object so far. A deployment drives pods. A config map just sits there, being read.
+
+Now, the size limit. A config map, and a secret, is capped at one mebibyte total. This is an et-see-dee limit, because every kubernetes object has to fit in one et-see-dee value. For larger configuration, like a ten megabyte lookup table, put it in object storage, a database, or a sidecar. Not a config map.
+
+You create config maps declaratively, with the yaml, or imperatively, with kubectl create config map, using from literal for inline values, and from file to pull in a file. On our map, this is the config map chip in the config box. Inert data, waiting to be projected into a pod, by one of the three consumption patterns we cover next.

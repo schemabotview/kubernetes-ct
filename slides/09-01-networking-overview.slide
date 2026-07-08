@@ -1,0 +1,15 @@
+# Networking, Ingress & Network Policies
+
+Notebook 04 = Services (L4). This goes **deeper**: the model, the CNI, L7 Ingress, and the firewall.
+
+## The arc
+
+- **Model** — 4 axioms: routable IP per Pod · Pod↔Pod no NAT · node↔Pod · one consistent IP.
+- **Pod CIDRs + CNI** — where IPs come from; what the plugin does in ms.
+- **Three paths** — Pod↔Pod · Pod↔Service · Pod↔external. *"Why unreachable?" = which path, which layer.*
+- **Ingress** — one entry → many Services by host/path + TLS. Resource vs controller. → **Gateway API**.
+- **NetworkPolicy** — default-open → **default-deny**, additive, **CNI-enforced**.
+
+> Lives in the **Networking** box — Service · Ingress · NetworkPolicy · CoreDNS + the **CNI** plumbing it.
+
+> 04 = *how do I reach it*. This = *how does the packet travel, and how do I lock it down.*

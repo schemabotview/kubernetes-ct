@@ -1,0 +1,15 @@
+Volumes, the basics.
+
+A pod declares a list of volumes, under the spec volumes field. Then each container mounts any of those volumes, under volume mounts. And the link between the two is by name.
+
+So in a manifest, a container has a volume mount that names scratch, at a mount path. And the pod has a volume, also named scratch, whose type is empty dir. The names match, and that is the connection.
+
+Two things to internalise.
+
+First, the volume is declared on the pod, but mounted into the container. That is exactly how multiple containers share a volume. The sidecar pattern from notebook two. Both containers declare a volume mount referencing the same volume name.
+
+Second, a volume type is a single key under the volume entry. Empty dir, host path, config map, secret, or persistent volume claim. Each volume entry uses exactly one of these type keys.
+
+The mount itself supports a few useful knobs. Read only true mounts it read only. Sub path mounts only a sub path of the volume, which is the doesn't live update gotcha from notebook five. And mount propagation is for advanced cases like see-ess-eye drivers, rarely set by hand.
+
+The volume types fall into two big groups. Ephemeral, which live with the pod. And persistent, which outlive the pod, backed by a persistent volume. The rest of this module walks both. On our map, a volume is the wire between a pod and whatever backs it. Either an ephemeral scratch space, or the durable storage box below.

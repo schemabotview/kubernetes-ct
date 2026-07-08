@@ -1,0 +1,21 @@
+Pod security context. Running with the right user, permissions, and capabilities.
+
+By default, containers run as root inside their pod, with a broad set of linux capabilities. Both are dangerous. The security context is your hardening toolkit. It exists at the pod level, and the container level, where the container level overrides the pod level.
+
+Let's walk the fields.
+
+Run as user, and run as group, set the u-eye-dee and g-eye-dee the process runs as. These are numbers, not names, because the kernel only knows numbers.
+
+Run as non root, set to true, means the container fails to start if it would run as u-eye-dee zero. It is the cheapest safety net, so use it.
+
+F-s group is the group applied to mounted volumes, so a non root container can actually write to them.
+
+Allow privilege escalation, set to false, disables setuid tricks. Combined with non root, there is no path to root.
+
+Read only root filesystem, set to true, mounts the root read only. Anything that needs to write needs an empty dir mount. This kills, an exploit drops a binary in slash tmp, style attacks.
+
+Capabilities drop all, drops every linux capability, and then you add back only the few you actually need.
+
+And seccomp profile, runtime default, applies the runtime's default syscall filter.
+
+Now, a big red flag. Privileged, set to true, turns all of this off. The container gets full root on the node. Only daemon sets that must manage the node, like the network and storage plugins, should ever set this. And a common trip up. If you set run as non root true, but the image's default user is root, the container fails. So set a run as user, or build the image with a non root user line. Modern distroless and chainguard images ship non root. On our map, these are the run as non root and read only filesystem chips in the security box. The per pod hardening that the next section enforces cluster wide.

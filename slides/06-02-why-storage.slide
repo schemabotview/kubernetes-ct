@@ -1,0 +1,19 @@
+# Why Storage Matters
+
+Container restarts **wipe the writable layer.**
+
+- Image's read-only layers **stay** (cached on node).
+- Writable top layer **deleted** on container removal.
+
+> By design — cattle, not pets. But `/var/lib/postgres`, `/data`, uploads, caches — **all gone on restart.**
+
+## Two lifetimes
+
+- **Pod-lifetime** — a volume as long as the **Pod**: `emptyDir`, ConfigMap/Secret. Scratch, IPC, config.
+- **Cluster-lifetime** — **external** (cloud disk, NFS) surviving Pod + node death + reschedule. **PV / PVC**.
+
+## The question per workload
+
+> **How long should this data live?** → picks the volume type.
+
+*Pods are ephemeral, so durable state lives in a separate resource the Pod mounts.*

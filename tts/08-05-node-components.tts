@@ -1,0 +1,11 @@
+Node components. The kube-let, kube proxy, and the container runtime.
+
+Every node, control plane or worker, runs three things in coordination.
+
+First, the kube-let, the agent on the node. And here is a key point. The kube-let does not run as a pod. It is a system service, started by system-d. Its job is sixfold. Register the node with the ay-pee-eye server. Watch the ay-pee-eye server for pods whose node name matches this node. For each such pod, drive the container runtime to make it real, by pulling the image, creating the network namespace, mounting volumes, and starting containers. Run the probes, and restart containers per the restart policy. Report status back, the phases, conditions, and container states. And monitor node level pressure, and evict when over thresholds. Crucially, the kube-let does not schedule. It only runs what has been bound to its node.
+
+Second, kube proxy, the data plane half of services. It watches services and endpoint slices, and programs the node's kernel networking, iptables, eye-pee-vee-ess, or en-eff-tables, so that service cluster addresses route to real pod addresses. It runs as a daemon set. And it is optional in modern clusters. Some network plugins, like cilium with e-b-p-f, replace it entirely.
+
+Third, the container runtime, what actually runs containers. Kubernetes ships no runtime. It speaks the container runtime interface to whichever one is installed. Container-d is the most common today, and see-are-oh is the other. Docker engine itself is no longer supported. The bridge that connected the kube-let to docker was removed in kubernetes one point twenty-four. The runtime lives at a socket, and the kube-let's runtime endpoint flag points at it.
+
+On our map, these three are the node runtime box. The kube-let, kube proxy, and the see-are-eye. The execute half, that turns the control plane's decisions into running pods.

@@ -1,0 +1,35 @@
+# Three Ways to Consume a ConfigMap
+
+## 1 · Individual env var — `configMapKeyRef`
+
+```yaml
+env:
+  - name: LOG_LEVEL
+    valueFrom:
+      configMapKeyRef: { name: app-config, key: LOG_LEVEL }
+```
+*Rename a key; take a subset.*
+
+## 2 · Bulk env — `envFrom`
+
+```yaml
+envFrom:
+  - configMapRef: { name: app-config }
+    prefix: APP_        # LOG_LEVEL → APP_LOG_LEVEL
+```
+*Keys already are your env names.*
+
+## 3 · Volume file — `volume.configMap`
+
+```yaml
+volumes:
+  - name: cfg
+    configMap: { name: app-file }
+```
+*App reads a file (`--config /path`).*
+
+| App reads | Use |
+|---|---|
+| a few env vars | `configMapKeyRef` |
+| many from one source | `envFrom` |
+| a file / live-update | **volume mount** |

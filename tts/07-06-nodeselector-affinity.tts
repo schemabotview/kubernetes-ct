@@ -1,0 +1,13 @@
+Node selector, and node affinity.
+
+Node selector is the simplest pin. It is a map of labels that must all match a node's labels for the pod to be schedulable there. So a pod with disk type s-s-d and gpu true will only schedule on a node that has both of those labels.
+
+Node labels come from two places. The admin sets them, with kubectl label node. Or the kube-let sets a few automatically when the node registers, like the hostname, the operating system, the architecture, and the zone and region. You can rely on those. Use node selector when the rule is plain. This pod needs a node with x. By the way, there is a bigger hammer, spec node name, which bypasses the scheduler entirely. Almost never in normal manifests.
+
+Node affinity is the grown up version, in two flavours. Required during scheduling, ignored during execution, is a hard requirement, but with the full set based selector language. And preferred during scheduling is a weighted soft preference, honoured if possible.
+
+Let's read an example. The pod must land in zone one-a or one-b, and on a node with a gpu label of any value. And it prefers m-five extra large instances if available. The operators are the set based ones, in, not in, exists, does not exist, plus greater than and less than for integer labels.
+
+That ignored during execution suffix means the affinity is not re-checked once the pod is placed. A placed pod stays, even if the node's labels later change.
+
+Rule of thumb. A single equality match, use node selector. Multi condition or set based, use node affinity required. And try but do not refuse, use preferred. On our map, both are the node selector and affinity chips in the scheduling box, feeding the scheduler's filter and score steps.

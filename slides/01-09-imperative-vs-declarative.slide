@@ -1,0 +1,33 @@
+# Imperative vs Declarative
+
+- **Imperative** — `kubectl run hello --image=nginx:alpine`. *Do this now.* Fast, ad-hoc, exam-legal.
+- **Declarative** — a YAML file + `kubectl apply`. *Make reality match this.* How real systems run.
+
+## The manifest
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+  labels: { app: hello }
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+```
+
+## Why declarative wins
+
+- **Version-controlled** — YAML in Git: diff, review, roll back.
+- **Idempotent** — apply 10× → **one** Pod (`run` errors the 2nd time).
+- **Composable** — `kubectl apply -f ./manifests/` for a whole environment.
+
+## The bridge (CKA time-saver)
+
+```bash
+kubectl run hello --image=nginx:alpine \
+  --dry-run=client -o yaml > pod.yaml
+```
+
+> `--dry-run=client` builds the object without sending it. Edit, then `apply`.

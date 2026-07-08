@@ -1,0 +1,23 @@
+# StorageClass — Dynamic Provisioning
+
+The **recipe** for making a new disk.
+
+```yaml
+kind: StorageClass
+metadata: { name: fast-ssd }
+provisioner: ebs.csi.aws.com
+parameters: { type: gp3, iops: "6000" }
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+```
+
+## The fields
+
+- **`provisioner`** — the CSI driver (`ebs.csi.aws.com`, `local-path`).
+- **`parameters`** — driver-specific (`type`, `iops` / `server`, `share`).
+- **`reclaimPolicy`** — `Delete` (dynamic) · `Retain` (curated).
+- **`volumeBindingMode`** — `Immediate` vs **`WaitForFirstConsumer`** (zonal → provision in the Pod's zone).
+- **`allowVolumeExpansion`** — online resize.
+
+> PVC: `storageClassName: fast-ssd`. Omit → **default** class; no default → **unbound**. `kubectl get sc`.

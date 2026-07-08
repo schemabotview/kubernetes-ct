@@ -1,0 +1,22 @@
+# Rolling Updates — Zero Downtime
+
+```bash
+kubectl set image deployment/web app=nginx:1.28-alpine
+```
+
+## What happens under the hood
+
+1. Controller sees a **new `spec.template` hash**.
+2. Creates a **new ReplicaSet** at `0`.
+3. **New RS up by `maxSurge`, old down by `maxUnavailable`**, in lockstep.
+4. New Pods go `Ready` → take traffic (Service selector).
+5. New = `replicas`, old = `0` → **done**.
+6. Old RS kept at `0` for **rollback**.
+
+## Speed vs safety
+
+- `surge 0 / unavail 1` — down-then-up; **no spare capacity**.
+- `surge 1 / unavail 0` — up-then-down; **always full capacity**.
+- **`25% / 25%`** *(default)* — overlap, fast.
+
+> Can't both be `0`. Watch: `kubectl rollout status deployment/web`.

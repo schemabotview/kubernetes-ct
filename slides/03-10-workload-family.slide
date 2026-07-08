@@ -1,0 +1,22 @@
+# The Rest of the Workload Family
+
+Deployment = stateless services. Four others for specific shapes.
+
+## The four
+
+- **DaemonSet** — *one Pod per node*. Node agents: log shippers, `node-exporter`, CNI/CSI, `kube-proxy`.
+- **StatefulSet** — *identity + storage survive restarts*. `pod-0/1/2`, stable name + PV. DBs, Kafka, etcd.
+- **Job** — *run to completion*. Retries via `backoffLimit`; `parallelism` / `completions`. Migrations, ETL.
+- **CronJob** — *a Job on a schedule*. `schedule: "0 2 * * *"`. Backups, reports.
+
+## Pick one
+
+```
+runs forever? ─no→ once → Job | scheduled → CronJob
+   yes
+   ├ stable identity + storage? → StatefulSet
+   ├ one per node? → DaemonSet
+   └ else → Deployment
+```
+
+> CKA: **Deployment** most of the time. Others only when the shape fits.

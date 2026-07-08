@@ -1,0 +1,11 @@
+Why ingress, and ingress controllers.
+
+You have services. They handle layer four routing inside the cluster, and with the load balancer type, they can expose a workload publicly. So why is a service not the whole answer.
+
+Because one load balancer per service is expensive and rigid. In a cloud cluster, each load balancer service provisions a separate cloud load balancer. That is tens of dollars per month each, and a separate public address each, which is hard to brand. There is no h-t-t-p level routing, so you cannot say, send slash api to the api service and slash static to the static service. There is no tee-el-ess termination at the load balancer, so the pod has to do tee-el-ess itself. And there is no host based routing, so you cannot share one address between two hostnames.
+
+What you want is one public entry point, in front of many services, with h-t-t-p aware routing. That is what an ingress gives you. One load balancer, one public address, fanning out to many in cluster services, based on the h-t-t-p host and path.
+
+Here is the crucial distinction. Ingress is the resource. Ingress controllers do the work. An ingress object is just declarative configuration. It does nothing on its own. You have to install an ingress controller in the cluster, and the controller watches ingress resources and configures the actual proxy. Without a controller, an ingress is just yaml sitting in et-see-dee.
+
+Several controllers exist. Ingress n-ginx is the most deployed, a see-en-see-eff project. Plus traffic, h-a-proxy, the a-double-you-ess load balancer controller, and google's ingress. You pick one per cluster, and install it, usually via helm. An ingress class routes an ingress to a controller. The ingress sets an ingress class name, and one class can be the default. The controller is itself a workload, fronted by a load balancer service, one load balancer per controller, not per ingress, which is the whole cost saving. On our map, this is the ingress chip in the networking box. The layer seven door in front of many services.

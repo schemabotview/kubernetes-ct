@@ -1,0 +1,24 @@
+# NetworkPolicy — the Firewall
+
+Cluster is **open** by default. NetworkPolicy = opt-in: **ingress** (who in) + **egress** (where out) for selected Pods.
+
+```yaml
+spec:
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { role: frontend } } }]
+      ports: [{ protocol: TCP, port: 80 }]
+```
+
+## Three semantics
+
+1. **Default-deny once selected** — `policyTypes:[Ingress]` + empty `ingress:` = **deny-all-ingress**.
+2. **Additive union** — allowed if **any** policy allows. No deny, no precedence.
+3. **CNI enforces** — Calico/Cilium ✓, **Flannel & kindnet ✗** (silently does nothing).
+
+## Gotchas
+
+> `from`/`to` list = **OR**; selectors in one entry = **AND**. `ipBlock` (CIDR+except).
+
+> Recipe: **default-deny-all** (`podSelector: {}`) + narrow allows — **re-allow DNS :53**.

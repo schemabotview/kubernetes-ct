@@ -1,0 +1,15 @@
+Labels and selectors.
+
+Once you have more than a handful of pods, listing everything and eyeballing it stops scaling. Labels are the fix. They are key value pairs, living in the metadata labels field, built for identifying and selecting groups of objects.
+
+For example, a pod might carry the labels app equals web, tier equals frontend, and version equals v-two. Values are short strings, and an object can carry any number of labels.
+
+The community settled on a convention, the app kubernetes eye-oh set. Name, instance, version, component, part of, and managed by. If you use these, tools like dashboards, helm, and argo see-dee understand your structure automatically.
+
+You can change labels on the fly. Kubectl label pod web, env equals prod, adds one. Add the overwrite flag to change it. A trailing dash removes it. And the show labels flag lists them.
+
+Now, a selector filters objects by their labels, and there are two flavours. Equality based is the everyday one. App equals web. Tier not equals frontend. And a comma means and. There is no or. Set based is the richer one. Environment in prod or staging. Tier not in a list. Release, meaning the key exists. And bang release, meaning it does not exist.
+
+Selectors show up everywhere. In kubectl with the label selector flag. In a service's selector field, which picks the pods it routes to. In a deployment, replica set, daemon set, or job selector, which picks the pods they manage. And in a network policy's pod selector.
+
+Here is the deep point. A selector is not a foreign key, and not a reference by name. It is a loose, live query. A service says, any pod with app equals web, and kubernetes re-resolves that every single moment. Add the label, and the pod joins the set. Remove the label, and it falls out. That loose coupling is exactly what makes rolling updates possible. The service tracks whoever matches right now, never individual pods. On our map, selectors are the invisible wiring from the workloads band down onto the pods they govern.

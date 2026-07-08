@@ -1,0 +1,13 @@
+Service types. Cluster eye-pee, node port, load balancer, and external name.
+
+A service's type field controls how reachable it is. There are four values, and each is mostly a superset of the one before.
+
+Cluster eye-pee is the default. The service gets a virtual address from the service range, and it is reachable only from inside the cluster. This is what every internal microservice should be.
+
+Node port makes the service reachable on every node's address, at a port in the thirty thousand range. It includes a cluster eye-pee too. From outside, you would hit any node's address on that node port. Use it for development clusters, and for bare metal clusters without a load balancer. In a real cloud cluster, you almost never expose a node port directly. A load balancer or an ingress sits in front.
+
+Load balancer exposes the service through a cloud provided external load balancer, and it implies a node port too. The cloud controller manager talks to the cloud ay-pee-eye, provisions the load balancer, and writes its public address back into the status. On kind and minikube there is no cloud provider, so these services stay pending forever, unless a tool like metal-el-bee plugs in a fake one.
+
+External name is a different beast. No proxying, no selector, no endpoints. It is just a dee-en-ess see-name, from the service name to an external hostname. Pods that look up the service get that external hostname back. It is useful for giving an external dependency a kubernetes shaped name, so client manifests look the same in every environment.
+
+On our map, all four are the same service chip, just dialed to different reach. The internal virtual address is the base, and each higher type simply adds an outward door.

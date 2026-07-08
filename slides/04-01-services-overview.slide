@@ -1,0 +1,21 @@
+# Services, DNS & Service Discovery
+
+Pod IPs change on **every** restart, rollout, scale. A client needs a **stable name + address** for "whichever api Pods are alive now."
+
+## The Service — glue between consumer & producer
+
+```
+web  --http://api:80-->  Service (stable VIP)  -->  a live api Pod
+        DNS: api → 10.96.0.42    kube-proxy rewrites
+```
+
+## The module
+
+- **Abstraction** — virtual IP + **label selector**; endpoints controller keeps it fresh.
+- **Three ports** — `port` · `targetPort` · `nodePort`.
+- **Types** — ClusterIP · NodePort · LoadBalancer · ExternalName.
+- **kube-proxy** — makes the *fictional* ClusterIP real in the kernel.
+- **CoreDNS** — `<svc>.<ns>.svc.cluster.local`.
+- **Headless** — DNS straight to Pod IPs (StatefulSets).
+
+> **Service = the foundational networking primitive.** Ingress & mesh build on it.

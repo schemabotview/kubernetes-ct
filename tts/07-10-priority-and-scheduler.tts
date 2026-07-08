@@ -1,0 +1,9 @@
+Priority class, preemption, and how the scheduler decides.
+
+First, priority class and preemption. By default, a pending pod waits politely until capacity is available. A priority class tags a workload as important enough that lower priority pods should be kicked out to make room. You define a priority class with a value, and a preemption policy, then reference it from a pod with the priority class name field.
+
+When a high priority pod cannot find a node, the scheduler checks. Is there a node where evicting some lower priority pods would make this one fit. If so, it evicts them, and they go back to pending, and it schedules the important pod. Two built in classes ship with every cluster, system cluster critical and system node critical, reserved for core-d-en-ess, kube proxy, and the network agents. Do not use those values for applications. And a preemption policy of never respects priority for queue order, but never preempts, which is good for batch work.
+
+Second, how the scheduler decides, in detail. The loop is filter, score, and profiles. In the filter phase, each plugin returns yes or no, and a node must pass all of them. Node resources fit, node affinity, node ports, pod topology spread, taint toleration, and volume binding. In the score phase, each plugin assigns zero to one hundred, and the weighted scores are summed, highest wins. Balanced allocation, resources fit, which defaults to packing lightly but can bin pack, inter pod affinity, and image locality, which prefers nodes that already have the image cached. And a profile is a named plugin configuration. You target one with the scheduler name field, or run multiple schedulers.
+
+You will not author a profile on the see-kay-ay, but know the field exists, and that the scheduler is not a monolith. This closes the module. Requests, limits, affinity, taints, spread, and priority. Every lever over where a pod runs. On our map, it all resolves at the kube scheduler in the control plane.

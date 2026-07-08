@@ -1,0 +1,13 @@
+The service abstraction, stable identity by label selector.
+
+A service is a kubernetes object with two halves. A virtual address and name, where clients connect, and which never changes. And a selector, like app equals api, the same label query you met in notebook two.
+
+A controller, technically the endpoints controller, runs a loop. It lists all pods matching the selector that are ready. It writes their addresses into an associated endpoints, or endpoint slice, object. Then every node's kube proxy watches those endpoints and programs the node's networking, so the service's virtual address forwards to one of the ready pod addresses.
+
+The minimum service manifest has a name, a selector like app equals api, and a port block, with a port the service exposes and a target port the container listens on.
+
+Now notice what is not there. There is no list of pod addresses. The service has zero hardcoded references to any pod. There is no type, so it defaults to cluster eye-pee, which is cluster internal only. And there is no image and no replicas, because a service does not run anything. It only routes.
+
+Apply this, and the cluster does three things behind your back. It allocates a cluster eye-pee from the service range, typically ten dot ninety six. It registers a dee-en-ess name, api dot namespace dot svc dot cluster dot local, that resolves to that cluster eye-pee. And it computes the endpoints for the selector and pushes them to every node's kube proxy.
+
+From that moment on, anything in the cluster that knows the name api can talk to it. Here is the elegance. The service never names a pod. It names a label, and the cluster re-resolves that live. On our map, this is the service chip resolving down onto the pods box.

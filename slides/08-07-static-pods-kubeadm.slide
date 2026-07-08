@@ -1,0 +1,18 @@
+# Static Pods & kubeadm
+
+## Static pods
+
+> Kubelet runs them from **disk** — *no API server*. Watches `/etc/kubernetes/manifests`.
+
+- Creates a **mirror pod** so `kubectl` sees it.
+- **Can't `kubectl delete`** — recreated in seconds. **Move the manifest file.**
+- Solves the **chicken-and-egg**: control plane holds `etcd.yaml`, `kube-apiserver.yaml`, … → **etcd first**.
+
+## kubeadm — the installer
+
+> **Doesn't** provision machines / OS / CNI. Two commands:
+
+- **`kubeadm init`** — preflight → **PKI** → static manifests → CoreDNS + kube-proxy → print `join` + token.
+- **`kubeadm join`** — token auth, verify CA hash, register Node.
+
+> **CNI is your job** — Pods stay `Pending` until you apply one (Calico). Tokens **expire 24h**.

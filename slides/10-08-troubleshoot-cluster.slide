@@ -1,0 +1,24 @@
+# Troubleshooting — Control Plane & Nodes
+
+## `kubectl` connection refused
+
+```bash
+sudo crictl ps | grep apiserver     # static pod up?
+sudo journalctl -u kubelet -n 50    # why it failed
+ls /etc/kubernetes/manifests/
+```
+> **Bad flag** in `kube-apiserver.yaml` · **expired cert** · **etcd down**.
+
+## Cluster-wide `ContainerCreating`
+
+> **Broken CNI** (`get pods -n kube-system`) · kubelet can't reach api-server.
+
+## Node `NotReady`
+
+```bash
+kubectl describe node <n>            # Conditions
+sudo systemctl status kubelet
+sudo journalctl -u kubelet -n 200
+df -h                               # full disk → NotReady
+```
+> `crictl ps` when kubelet is down. **cordon/drain → fix → uncordon.**

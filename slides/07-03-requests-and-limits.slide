@@ -1,0 +1,28 @@
+# Requests & Limits
+
+```yaml
+resources:
+  requests: { cpu: 250m, memory: 256Mi }
+  limits:   { cpu: 500m, memory: 512Mi }
+```
+
+## requests = reserve
+
+> The **minimum the scheduler reserves.** Sums per node, fits into headroom. **A scheduling input, NOT a runtime cap** — can burst higher if free.
+
+## limits = the ceiling (cgroup)
+
+- **CPU over** → **throttled** (slow, no restart)
+- **Memory over** → **OOM-killed** → restart
+
+## Units
+
+- CPU `1` = 1 core · `500m` = ½ · Memory `Ki/Mi/Gi/Ti`
+
+## Omissions
+
+- requests off, limits on → requests **= limits**
+- limits off → **no ceiling**, hogs the node
+- both off → **unbounded** (fix: `LimitRange`)
+
+*Also `ephemeral-storage` — kubelet evicts over-users.*

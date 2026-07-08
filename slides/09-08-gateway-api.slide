@@ -1,0 +1,26 @@
+# The Gateway API — Ingress, but More
+
+`Ingress` is aging — half its behaviour lives in **annotations** (no fields for rate-limit, rewrites, splitting). **Gateway API** = the successor.
+
+## One Ingress → three objects (by owner)
+
+- **GatewayClass** — the implementation (≈ IngressClass)
+- **Gateway** — a listener: IP, port, TLS. **Platform team.**
+- **HTTPRoute** (+ GRPC/TCP/TLS) — routes. **App team.**
+
+```yaml
+kind: Gateway
+spec:
+  listeners: [{ name: https, port: 443, protocol: HTTPS, tls: {...} }]
+---
+kind: HTTPRoute
+spec:
+  parentRefs: [{ name: public }]
+  rules: [{ backendRefs: [{ name: hello, port: 80 }] }]
+```
+
+## Why
+
+> Clean **role split** · richer matching (headers/methods) · **traffic splitting as a field** · TCP/UDP/gRPC.
+
+> **2026:** v1 GA. **CKA still tests Ingress** — learn it first.

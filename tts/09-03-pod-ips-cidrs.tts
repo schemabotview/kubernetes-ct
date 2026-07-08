@@ -1,0 +1,13 @@
+Pod addresses, and pod ranges. Where the addresses come from.
+
+A typical kube-adm cluster has two address ranges, separate from your v-p-c or l-a-n.
+
+The pod range is where pods get their addresses. A common one is one ninety two dot one sixty eight, from kube-adm and calico, or ten dot two forty four, from flannel.
+
+The service range is where service cluster addresses come from, defaulting to ten dot ninety six. You met this in notebook four.
+
+Now, the pod range is subdivided per node. Each node gets a slice, typically a slash twenty four, which is two hundred fifty six addresses, that it allocates from for the pods it runs. You can see a node's slice with kubectl get node, output as jason path of spec pod see-eye-dee-are.
+
+This layout lets the cluster route by node. Any packet destined for node two's slice goes to node two. And the container network interface's job is to publish those per node routes, via b-g-p, overlay tunnel headers, or whatever mechanism it picked.
+
+Here is the everyday gotcha. The one ninety two dot one sixty eight range overlaps with what corporate l-a-ns and home routers use. If your laptop's kind cluster picks the same range as your v-p-n, then traffic to that range from the host does not know whether it means the cluster, or the office. That is why production clusters pick non overlapping ranges, and tools like calico let you allocate from a non default range. On our map, pod addresses live on the pods box. And this section is why each pod there has a real, node routable address, rather than a shared host port.

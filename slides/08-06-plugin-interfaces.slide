@@ -1,0 +1,22 @@
+# Plug-in Interfaces — CRI · CNI · CSI
+
+Small core → three plug-in seams.
+
+## CRI — Container Runtime
+
+> gRPC kubelet → runtime. `RuntimeService` (lifecycle) + `ImageService` (images). **One per node** — containerd / CRI-O.
+
+## CNI — Container Network
+
+> JSON-over-stdin. On new Pod netns: **(1)** allocate Pod IP · **(2)** program routing (Pods, Services, internet) · **(3)** return IP.
+
+- **Calico · Cilium · Flannel · AWS VPC · Azure** — differ in encap (VXLAN / L3 / **eBPF**), NetworkPolicy, perf.
+- `kind` → `kindnet`.
+
+## CSI — Container Storage
+
+> gRPC to backends (notebook 06). One driver per backend.
+
+## The point
+
+> K8s = **orchestration**; the *doing* is **delegated**. Same logic on a Pi (k3s) or 1000-node EKS.

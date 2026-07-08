@@ -1,0 +1,19 @@
+Scheduling. Resources, affinity, and taints.
+
+When a controller creates a pod, its node name is empty, and the pod sits pending. The kube scheduler decides which node it lands on. And this module is all about the inputs that bias that decision.
+
+The scheduler runs one loop. It filters the nodes that could run the pod. It scores the survivors. And it binds the pod to the best one. Everything in this module tunes one of those steps.
+
+Requests and limits. How much you reserve, which is filtering, and how much you cap at runtime. Plus the quality of service class that decides eviction order.
+
+Node selector and node affinity. Saying, I want this kind of node. That is pod side, matching node labels.
+
+Pod affinity, anti affinity, and topology spread. Saying, place me near, or away from, these other pods.
+
+Taints and tolerations. Saying, stay away from this node, unless you have explicitly opted in. That is node side.
+
+Priority class and preemption. Saying, I am important enough to kick others out.
+
+And governance, with limit range and resource quota, for multi team clusters.
+
+The key thing to remember. The scheduler decides. The kube-let runs. And the scheduler is a controller like any other. It reads state, takes action, and writes the node name. On our map, this whole module is the scheduling box in the operate band, all feeding the kube scheduler in the control plane. Master these inputs, and you control where every pod runs.

@@ -1,0 +1,29 @@
+# Troubleshooting — Applications
+
+~30% of the exam. **Know the failure mode + first command.**
+
+## `Pending`
+
+```bash
+kubectl describe pod <name>   # Events!
+```
+> `FailedScheduling` (CPU/taint/selector) · `FailedMount` (PVC) · `ImagePullBackOff`.
+
+## `CrashLoopBackOff`
+
+```bash
+kubectl logs <name> --previous   # the crashed container
+kubectl describe pod <name>      # restarts + exit code
+```
+> App bug · **OOMKilled** (exit 137) · missing config · failing readiness (`READY 0/1`).
+
+## Can't reach a Service
+
+```bash
+kubectl get endpoints <name>   # <none> = selector/Ready
+nslookup <svc> ; nc -vz <svc> <port>
+```
+
+## `kubectl debug`
+
+> `debug -it <pod> --image=busybox --target=<c>` (distroless) · `debug node/<n>` → `/host`.

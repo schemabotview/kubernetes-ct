@@ -1,0 +1,27 @@
+# Volumes — the Basics
+
+Pod declares **volumes**; containers **mount** them. Linked **by name**.
+
+```yaml
+spec:
+  containers:
+    - volumeMounts:
+        - name: scratch          # → the volume below
+          mountPath: /workspace
+  volumes:
+    - name: scratch              # name
+      emptyDir: {}               # type
+```
+
+## Two facts
+
+- **Declared on the Pod, mounted into the container** — how containers **share** a volume (sidecar pattern).
+- **A type is one key**: `emptyDir` · `hostPath` · `configMap` · `secret` · `persistentVolumeClaim`. **Exactly one** per entry.
+
+## Mount knobs
+
+- **`readOnly: true`**
+- **`subPath`** — one sub-path (the no-live-update gotcha)
+- `mountPropagation` — advanced
+
+> Two groups: **ephemeral** (live with Pod) · **persistent** (outlive it, backed by a PV).

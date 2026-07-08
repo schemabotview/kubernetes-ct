@@ -1,0 +1,27 @@
+# Init Containers
+
+Run **once, in order, to completion — before** any main container starts. For: fetch config, run a migration, wait for a dependency.
+
+## The pattern
+
+```yaml
+initContainers:
+  - name: prepare
+    image: busybox:1.36
+    command: ["sh","-c","echo hi > /shared/index.html"]
+    volumeMounts: [{ name: html, mountPath: /shared }]
+containers:
+  - name: app
+    image: nginx:alpine
+    volumeMounts: [{ name: html, mountPath: /usr/share/nginx/html }]
+volumes: [{ name: html, emptyDir: {} }]
+```
+
+**Sequence:** schedule → init writes to shared volume → exits `0` → app serves it.
+
+## What to internalise
+
+- **Same spec** as main containers (image, env, mounts).
+- **Sequential** — a list, top-down; order matters.
+- **Share volumes + network** — how they hand off work.
+- **Fail → `restartPolicy` decides**; **`Initialized: True`** only after the last one.

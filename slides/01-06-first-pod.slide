@@ -1,0 +1,25 @@
+# Your First Pod — `kubectl run`
+
+The Kubernetes hello world:
+
+```bash
+kubectl run hello --image=nginx:alpine
+```
+
+## What actually happens
+
+1. `kubectl` builds a **Pod object** in memory.
+2. `POST`s it to the **api-server** over HTTPS.
+3. api-server validates → writes to **etcd**.
+4. **scheduler** sees an unassigned Pod → picks a node.
+5. **kubelet** on that node → tells the runtime to pull + start.
+6. Status flows back: `Pending` → `ContainerCreating` → `Running`.
+7. `kubectl get pods` reads that status from the api-server.
+
+**You did steps 1–2. The rest happened on its own.**
+
+## The one idea to keep
+
+> `kubectl run` didn't SSH anywhere. It **wrote an object to a database and went home**. A controller watching that database did the rest.
+
+**Declarative state + controllers reconciling to it** — the heart of every object in this course.

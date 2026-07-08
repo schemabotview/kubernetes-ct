@@ -1,0 +1,22 @@
+# Troubleshooting — Networking
+
+## "Service unreachable" — 3 questions
+
+1. **DNS?** `nslookup <svc>` → CoreDNS / `dnsPolicy`.
+2. **Endpoints?** `get endpoints <svc>` → `<none>` = selector / not Ready.
+3. **Port?** `nc -vz <svc> <port>` → NetworkPolicy / CNI.
+
+## Other cases
+
+- **Wrong pod** — overlapping selectors · `sessionAffinity`.
+- **External not arriving** — LB `EXTERNAL-IP <pending>` · Ingress `Address` empty (IngressClass).
+- **NetPol not blocking** — **kindnet ✗** · no policy selects · `from`/`to` too broad.
+- **`refused` outside** — node IP? NodePort? selector? port (`ss -ln`)? `containerPort==targetPort`?
+
+## netshoot
+
+```bash
+kubectl run --rm tmp -it \
+  --image=nicolaka/netshoot -- bash
+```
+> `dig · tcpdump · mtr · curl · nc · ss` — prod as a broken Pod would.

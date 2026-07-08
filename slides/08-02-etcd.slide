@@ -1,0 +1,19 @@
+# etcd — the Source of Truth
+
+A distributed key/value store. **Every object is a row.** Lose etcd → **lose the cluster's memory.**
+
+## Properties
+
+- **Strongly consistent** — Raft; reads see latest write.
+- **HA with an odd count** — 3 or 5; tolerates (N−1)/2 down.
+- **Ports** `2379` (client) · `2380` (peer) — both TLS.
+- **Cert-authenticated** — api-server uses `apiserver-etcd-client.crt`.
+
+## Where it runs
+
+- **kubeadm** — a **static pod** (`/etc/kubernetes/manifests/etcd.yaml`), started first.
+- **External etcd** — dedicated machines; better isolation.
+
+Keys: `/registry/pods/default/web-...`. Go through the **api-server**, not `etcdctl`.
+
+> **etcd backup = life insurance.** `snapshot save` / `restore`. The CKA tests it. *(commands later this module)*

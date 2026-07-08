@@ -1,0 +1,9 @@
+Dee-en-ess in kubernetes. Core-d-en-ess and the service name pattern.
+
+A cluster eye-pee is hard to remember. The piece that makes services actually usable is cluster dee-en-ess. Every kubernetes cluster ships a dee-en-ess server, almost always core-d-en-ess, running as a deployment in the kube system namespace, with its own service in front. When a pod starts, the kube-let writes the pod's resolver config to point at the core-d-en-ess service, so every name lookup the pod makes goes there first.
+
+Now, the service dee-en-ess pattern. Core-d-en-ess exposes a name for every service, of the form service dot namespace dot svc dot cluster dot local. So a service called api in the default namespace resolves at api dot default dot svc dot cluster dot local. Because of the search domains in the resolver config, two shortcuts apply. Inside the same namespace, the bare service name is enough. Curl http api just works. But across namespaces, you must include the namespace. Curl http api dot default.
+
+What gets a record. Services get an address record at the cluster eye-pee. Headless services get an address record for every ready pod, which is the next section. Named ports get service records. And pods can get individual records, but only opt in. Day to day, you use service dee-en-ess, not pod dee-en-ess. The cluster dot local suffix is configurable, but everyone leaves it alone, and the see-kay-ay assumes it.
+
+And when dee-en-ess is the culprit. If pods can reach services by cluster eye-pee, but a name lookup fails, check three things. Are the core-d-en-ess pods running and ready. Does the kube dee-en-ess service have endpoints. And does a debug pod's resolver config point at the kube dee-en-ess cluster eye-pee. The full flow is in notebook ten. On our map, this is the core-d-en-ess chip in the networking box, the name layer in front of every service.

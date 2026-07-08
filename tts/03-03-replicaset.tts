@@ -1,0 +1,15 @@
+Replica set, keeping n pods alive.
+
+The replica set is the simplest workload controller. Its whole job is to keep exactly n pods, matching a label selector, alive.
+
+A replica set manifest has three fields in its spec. Replicas, which is the target count, or how many pods you want. Selector, which is the label query used to identify my pods. And template, which is a complete pod spec. Everything below the template spec is exactly what you would put in a pod manifest.
+
+When the controller observes this object, it runs a tight loop. It counts the pods matching the selector. If there are fewer than the target, it creates new pods from the template. If there are more, it deletes the excess. And it repeats this forever.
+
+Two things to lock in.
+
+First, the selector and the template labels must agree. If your selector says app equals web, but the template labels say app equals api, the controller creates pods that it then cannot see. So it loops forever. I need three pods, I see zero, let me make three more. Kubernetes catches this at admission time and rejects the manifest. But it is a real footgun in custom controllers.
+
+Second, pods created by a replica set carry owner references pointing back to the replica set, and they get names like web, then a random suffix. That is how deletes cascade. Delete the parent, and the pods go with it.
+
+And now the self healing demo. If you delete a pod that a replica set owns, the controller notices within seconds and creates a replacement. Same template, new name. That is the reconcile loop, and you can watch it happen live. On our map, this is the replica set chip inside workload kinds. It is the count keeper. But you rarely write one directly, for the reason the next section explains.

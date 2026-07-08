@@ -1,0 +1,22 @@
+# Immutable ConfigMaps & Secrets
+
+Default: kubelet **watches** every mounted ConfigMap. At scale (CMs × Pods × nodes) → lots of watches.
+
+```yaml
+metadata: { name: app-config-v3 }   # version in the name
+data: { LOG_LEVEL: warn }
+immutable: true
+```
+
+## `immutable: true`
+
+- **"Never changes — don't watch."** → performance.
+- Can only be **deleted + recreated**, not edited → safety.
+- Same field on **Secrets**.
+
+## The pattern: release-versioned config
+
+> Ship `app-config-v3` **with** `web-v3`; delete the pair together. Born, deployed, and dies with **one release**.
+
+- **Kustomize/Helm** hash the data into the name → new object per change → **forces a rollout**.
+- Trade-off: **no live-update** — exactly right for release-scoped config.

@@ -1,0 +1,11 @@
+Taints and tolerations. The node side, go away.
+
+Node selector and affinity are pod side. I want this kind of node. Taints are node side. Stay away, unless you have explicitly opted in. Together, they let cluster admins reserve nodes for specific workloads.
+
+You taint a node with kubectl taint nodes, and a key equals value colon effect. There are three effects. No schedule means new pods that do not tolerate this taint will not schedule here, but existing pods stay. Prefer no schedule is the soft version. The scheduler tries to avoid, but will not refuse. And no execute means new non tolerating pods will not schedule, and existing non tolerating pods are evicted. Use that one sparingly.
+
+On the pod side, you add a toleration, with a key, an operator, a value, and an effect. Here is the key point. A toleration unlocks the matching taint. It does not attract the pod there. So to actually steer a pod onto the tainted node, you tolerate the taint, and also use a node selector or node affinity. The operator exists matches the key regardless of value. The operator equal, which is the default, matches both key and value.
+
+Kubernetes itself uses built in taints. Not ready, unreachable, memory pressure, disk pressure, unschedulable when a node is cordoned, and a control plane taint on master nodes. Every regular pod implicitly tolerates not ready and unreachable for three hundred seconds, so a brief blip does not immediately evict. You tune that with toleration seconds.
+
+You remove a taint with a trailing minus. And the see-kay-ay wants you quick with both kubectl taint, and hand writing tolerations. On our map, these are the taints and tolerations chips. The node saying go away, and the pod saying, I am allowed.

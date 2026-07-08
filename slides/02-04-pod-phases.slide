@@ -1,0 +1,30 @@
+# Pod Phases, Conditions & States
+
+`status` has **three views**, each answering a different question.
+
+## Phase — the headline (one word)
+
+- **Pending** — not all containers started (schedule / image pull)
+- **Running** — ≥ 1 container up
+- **Succeeded** / **Failed** — all exited, `0` vs non-zero
+- **Unknown** — node stopped reporting
+
+## Conditions — flip in order
+
+`PodScheduled` → `Initialized` → `ContainersReady` → **`Ready`**
+
+> Stuck on image pull: `PodScheduled: True`, `Ready: False` — read `message`.
+
+## Container states — per container
+
+- **waiting** — `ImagePullBackOff`, `CrashLoopBackOff`…
+- **running** — `startedAt`  ·  **terminated** — `exitCode`
+- **`restartCount` climbing = red flag** even while "Running"
+
+## The flow
+
+```bash
+get pods            # phase + restarts
+describe pod <n>    # Events: — richest signal
+logs <n> --previous # last words before a crash
+```

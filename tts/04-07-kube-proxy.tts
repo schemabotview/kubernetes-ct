@@ -1,0 +1,17 @@
+How kube proxy actually routes traffic.
+
+The service's cluster eye-pee is a fiction. There is no process listening on that address. So what actually makes the packet arrive at a pod. Kube proxy does.
+
+Kube proxy runs as a daemon set on every node. It watches the ay-pee-eye server for services and endpoints. When it learns about a new service, it programs the node's kernel networking, so that packets destined for the service address get rewritten to a real pod address.
+
+There have been three modes, and you will meet two in the wild.
+
+The iptables mode is the long time default. Kube proxy writes iptables rules that rewrite packets for the cluster eye-pee to one of the endpoints, picked at random. It is simple, in kernel, and adds no process to the data path. But the rule count grows with the number of services times endpoints, which slows rule updates in very large clusters.
+
+The eye-pee-vee-ess mode programs the kernel's eye-pee virtual server module instead. Same idea, but with a hash based lookup instead of linear iteration, and richer load balancing algorithms. It is faster at large scale.
+
+And the en-eff-tables mode is a newer alternative, using the modern packet filter framework. It is the direction of travel for new clusters.
+
+What matters day to day. For debugging, you can list the nat rules on a node to see what kube proxy wrote. For a service mesh, tools like istio and linkerd intercept traffic before kube proxy sees it, so they sit on top of it, not instead of it. And for scale, past a few thousand services, switch from iptables to eye-pee-vee-ess or en-eff-tables.
+
+Now, the crucial misconception to kill. Kube proxy is not in the data path of an established connection. It only sets up the rules. The actual packets flow through the kernel directly, pod to pod, with no userspace hop. That is why service addresses are essentially free at runtime. On our map, this is the kube proxy component on the worker node, wiring the service onto the pods.

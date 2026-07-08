@@ -1,0 +1,11 @@
+Cluster architecture, and kube-adm.
+
+Seven modules in, you have used the control plane. Now we open it up. The machinery behind every object you have created. This is the densest chapter in the course, and the see-kay-ay tests it heavily.
+
+Let me name every piece. On the control plane, et-see-dee holds the state, the kube ay-pee-eye server is the front door that kubectl and everything else talks to, the scheduler places pods, the controller manager runs the reconcile loops, and the cloud controller manager talks to the cloud. On the worker nodes, the kube-let drives the container runtime through the see-are-eye, kube proxy programs service networking, and a container network interface plugin wires up pod networking.
+
+Four rules of thumb to memorise. First, only the ay-pee-eye server talks to et-see-dee. Everything else talks to the ay-pee-eye server. Second, the ay-pee-eye server is stateless, so it is horizontally scalable, and the state lives in et-see-dee. Third, controllers do not poll, they watch, over a long lived https stream that delivers events. And fourth, nodes do not trust each other. Everything authenticates to the ay-pee-eye server, which is the single source of trust.
+
+The module walks each box. Et-see-dee, the ay-pee-eye server, the scheduler and controllers, the node components, and the see-are-eye, see-en-eye, and see-ess-eye plug-in points. Then the operational skills. Static pods, the kube-adm install, the cluster public key infrastructure, et-see-dee backup and restore, which is the see-kay-ay's flag bearer, and cluster upgrades.
+
+On our map, this whole module is the control plane and node runtime boxes. The two halves of the cluster column that everything else has been riding on.

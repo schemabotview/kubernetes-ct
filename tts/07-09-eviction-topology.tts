@@ -1,0 +1,13 @@
+Eviction, and topology spread constraints.
+
+First, eviction. There are two kinds.
+
+Node pressure eviction. The kube-let watches eviction signals, like available memory, disk, and inodes. Past its thresholds, it evicts pods to relieve the pressure, in quality of service order. Best effort first, then burstable pods over their requests, then guaranteed last. Within each tier, it picks the biggest users of the pressed resource.
+
+Ay-pee-eye initiated eviction. Kubectl drain, then a node, gracefully evicts every non daemon set pod, before maintenance. It calls the eviction ay-pee-eye, which respects pod disruption budgets. By contrast, kubectl delete pod is not an eviction, and it ignores budgets.
+
+A pod disruption budget caps how many pods may be voluntarily disrupted at once. You set a min available, or a max unavailable, plus a selector. Drain refuses to evict if it would drop below the min available. But budgets only guard voluntary disruptions, like drain and autoscaling. They do not help against hardware failure.
+
+Second, topology spread constraints. This is a cleaner way than anti affinity to say, spread evenly. You set a max skew, which is the maximum imbalance between any two domains, a topology key, and a when unsatisfiable policy. Max skew one is the tightest. Do not schedule is the hard version, leaving the pod pending if it is impossible. Schedule anyway is the soft version. Cluster defaults often spread across hostname and zone with schedule anyway, which is the free zone spreading on managed clusters.
+
+So, use spread constraints for, spread evenly. And use anti affinity for, do not co-locate me with a different workload. On our map, both sit in the scheduling box, shaping the scheduler's placement.

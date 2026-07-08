@@ -1,0 +1,23 @@
+# The Cluster at 30,000 Feet
+
+A cluster = two kinds of machine. **The control plane decides; the nodes execute.**
+
+## Control plane — the brain
+
+- **etcd** — distributed key-value store; the **single source of truth**. Every object is a row here.
+- **kube-apiserver** — the **front door**. Everything reads/writes through it. *Only* it touches etcd.
+- **kube-scheduler** — picks the node a new Pod lands on.
+- **controller-manager** — the reconcile loops that drive reality → desired state.
+
+## Worker node — the muscle
+
+- **kubelet** — told "run these Pods", drives the local runtime.
+- **container runtime** — usually **containerd**; the **CRI** is how kubelet talks to it.
+- **kube-proxy** — the network plumbing that makes Services work.
+
+```
+control plane  →  decides  ┐
+worker nodes   →  execute  ┘  one logical cluster
+```
+
+> Full tour of every box in **notebook 08**. For now, just the shape.

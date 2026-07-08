@@ -1,0 +1,9 @@
+Services, dee-en-ess, and service discovery.
+
+You ended notebook three with a deployment running three n-ginx pods. Each pod got its own eye-pee, and each address is minted fresh on every restart, rollout, and scale. Now a web pod wants to call your api. It cannot hardcode pod addresses, because they change. It cannot list and filter all the pods, because that is a tiny custom controller per client. And there is no per pod dee-en-ess by default. What every client really wants is a stable name, and a stable address, that point at whichever api pods are alive right now.
+
+That is the service. It is the glue between consumers and producers. The web pod calls http colon slash slash api. Dee-en-ess resolves the name api to a stable virtual address. And kube proxy rewrites the packet to one of the live pod addresses. The web pod never needs to know which specific pod served it.
+
+This module builds services from the ground up. First, the abstraction, which is a virtual address plus a label selector, with the endpoints controller keeping the pod list fresh. Then the three port numbers, port, target port, and node port, which the see-kay-ay wants you to be precise about. Then the types, cluster eye-pee, node port, load balancer, and external name, which control how far the service reaches. Then how kube proxy routes, where the cluster eye-pee is a fiction that the kernel makes real. Then cluster dee-en-ess, with core-d-en-ess and the service dot namespace dot svc dot cluster dot local name pattern. And finally headless services, which give dee-en-ess straight to pod addresses, the base under stateful sets.
+
+On our map, this whole module lives in the networking box. The service, core-d-en-ess, and the kube proxy that wires them onto the pods. The service is the foundational networking primitive. Everything above it, ingress and the mesh, uses services to find the pods.

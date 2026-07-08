@@ -1,0 +1,24 @@
+# etcd Backup & Restore
+
+**The CKA's flag-bearer.** Learn it cold.
+
+## Save
+
+```bash
+ETCDCTL_API=3 etcdctl snapshot save /backup/snap.db \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+```
+> One file — **move it off the node.** `snapshot status` to verify.
+
+## Restore
+
+1. **Stop control plane** — move manifests out of `/etc/kubernetes/manifests`.
+2. `snapshot restore … --data-dir=/var/lib/etcd-from-backup`
+3. **Repoint** `etcd.yaml` hostPath → the new dir.
+4. **Restore manifests** → kubelet boots from snapshot.
+5. Verify: `kubectl get nodes`.
+
+> `ETCDCTL_API=3` · **3 certs** (ca/cert/key) · **point-in-time** (later changes lost).

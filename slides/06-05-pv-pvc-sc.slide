@@ -1,0 +1,21 @@
+# PV · PVC · StorageClass
+
+Persistent storage **splits the problem in two.**
+
+- **PV** *(cluster-scoped)* — a real piece of storage. The **admin** provides it.
+- **PVC** *(namespaced)* — *"I want 5Gi RWO from `fast-ssd`."* The **app** asks.
+
+```
+Pod →ref→ PVC ("want N GiB") →bound→ PV ("here's the disk")
+```
+
+> App says **what** · PV says **what's available** · controller **binds**. App never knows EBS vs NFS vs Ceph.
+
+## Two ways the PV appears
+
+- **Static** — admin **pre-creates** PVs; PVC binds best fit. Corp NFS, on-prem SAN.
+- **Dynamic** — **StorageClass** + CSI **creates a PV on demand**. Everyday cloud.
+
+> Needs a StorageClass; managed clusters ship a **default**. On `kind`: `local-path` (a node dir).
+
+**The triangle the CKA tests hardest.**

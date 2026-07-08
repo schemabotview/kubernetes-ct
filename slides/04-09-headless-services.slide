@@ -1,0 +1,23 @@
+# Headless Services
+
+Want the **individual Pod IPs**, not a shared VIP? Set **`clusterIP: None`**.
+
+```yaml
+spec:
+  clusterIP: None      # "headless"
+  selector: { app: api }
+  ports: [{ port: 80, targetPort: 5678 }]
+```
+
+## Effects
+
+- **No ClusterIP, no kube-proxy rules** — no VIP.
+- **DNS returns many A records** — one per Ready Pod.
+- **EndpointSlices still exist.**
+
+## Two use cases
+
+- **StatefulSets** — per-Pod DNS `<pod>.<svc>.<ns>.svc.cluster.local`. How `cassandra-0…` peers find each other.
+- **Client-side LB** — gRPC / Kafka manage their own connection to each backend.
+
+> **Default to `ClusterIP`.** Headless = the base under StatefulSets, not an upgrade.

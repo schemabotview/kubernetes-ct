@@ -1,0 +1,26 @@
+# Eviction & Topology Spread
+
+## Eviction
+
+- **Node-pressure** — kubelet evicts in QoS order: **BestEffort → Burstable → Guaranteed**.
+- **`kubectl drain`** — graceful evict (maintenance), **respects PDBs**. `delete pod` doesn't.
+
+```yaml
+kind: PodDisruptionBudget
+spec:
+  minAvailable: 2          # or maxUnavailable: 1
+  selector: { matchLabels: { app: web } }
+```
+> Drain won't drop below `minAvailable`. **Voluntary disruptions only** — not hardware death.
+
+## Topology spread
+
+```yaml
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule   # or ScheduleAnyway
+    labelSelector: { matchLabels: { app: web } }
+```
+
+> **spread** → even distribution · **anti-affinity** → don't co-locate a *different* workload.

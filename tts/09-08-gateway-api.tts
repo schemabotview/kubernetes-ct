@@ -1,0 +1,17 @@
+The gateway ay-pee-eye. Ingress, but more.
+
+Ingress is showing its age. Half of every controller's behaviour lives in annotations, which are controller specific magic strings, because the ingress resource itself does not have fields for things like rate limiting, header rewrites, or traffic splitting. The gateway ay-pee-eye is the official successor.
+
+It splits the single ingress object into three, matching who owns what.
+
+The gateway class describes a kind of gateway implementation. It is the analogue of the ingress class.
+
+The gateway is a physical listener. An address, a port, and a tee-el-ess config. It is owned by infrastructure or platform teams.
+
+And the h-t-t-p route, plus g-r-p-c route, tee-see-pee route, and tee-el-ess route, holds the routing rules attached to a gateway. These are owned by application teams.
+
+So in a manifest, a gateway declares listeners, like an h-t-t-p-s listener on port four forty three with a certificate. And an h-t-t-p route references that gateway as a parent, lists hostnames, and defines match rules pointing at backend services.
+
+Why bother. First, a cleaner role split. Platform admins own gateways, and app teams own routes, and are-back matches that split. Second, richer matching. Headers, query parameters, and methods, not just host and path prefix. Third, first class traffic splitting. Send ninety percent to version one and ten percent to version two, as a built in field, not an annotation. And fourth, protocol diversity. Tee-see-pee, you-dee-pee, g-r-p-c, and tee-el-ess, all in the same model.
+
+As of twenty twenty-six, the gateway ay-pee-eye version one is generally available, and most major ingress controllers support it side by side with ingress. But the see-kay-ay still tests ingress. So learn ingress first, and expect to write gateways in production within the next year or two. On our map, the gateway ay-pee-eye is the next generation of the same ingress chip. The same layer seven job, with a cleaner model.

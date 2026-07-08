@@ -1,0 +1,26 @@
+# What Kubernetes Is
+
+**Kubernetes runs containers across a fleet of machines** — restarting them when they die, replacing them when a machine dies, and giving them a stable way to find each other.
+
+## The one-line model
+
+- **Fleet of machines** — each a **node**: a few run Kubernetes (**control plane**), the rest run your containers (**workers**).
+- **You declare, it schedules** — "I want 3 copies", not "run this here".
+- **Self-healing** — container or node dies, Kubernetes replaces it.
+- **Stable identity** — a **Service** name/IP always points at the live Pods.
+
+## The whole platform on one map
+
+```
+ kubectl  →  api-server  →  control loop  →  Pods
+              (etcd · scheduler · controllers)
+   Workloads · Resources · Operate (sched/RBAC/security)
+```
+
+Everything points at the **api-server** at the center. Every module zooms into one corner of this map.
+
+## Why it matters
+
+- The **default** for production containers — **EKS · GKE · AKS**, on-prem, laptops, CI/CD.
+- The **CKA** is the credential — this course takes you there.
+- **k8s** = *k* + eight letters + *s*. Greek for "helmsman."

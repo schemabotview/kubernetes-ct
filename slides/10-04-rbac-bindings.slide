@@ -1,0 +1,29 @@
+# RBAC — Bindings, Subjects & auth can-i
+
+A Role is **just permissions** until **bound.**
+
+- **`RoleBinding`** — one namespace; binds a Role *or* ClusterRole.
+- **`ClusterRoleBinding`** — cluster-wide.
+
+```yaml
+kind: RoleBinding
+subjects:
+  - { kind: User, name: alice }
+  - { kind: ServiceAccount, name: ci-runner, namespace: ci }
+roleRef: { kind: Role, name: pod-reader }
+```
+
+> **Crossover:** RoleBinding + **ClusterRole** → applies **only in that namespace**. Reuse one role everywhere.
+
+## Verify
+
+```bash
+kubectl auth can-i list pods -n team-a
+kubectl auth can-i '*' '*' --all-namespaces   # cluster-admin?
+```
+
+## Built-in ClusterRoles
+
+> **cluster-admin** (all) · **admin** (ns) · **edit** (workloads) · **view** (RO, **no Secrets**).
+
+**Aggregated** — label `aggregate-to-view: "true"` folds in.

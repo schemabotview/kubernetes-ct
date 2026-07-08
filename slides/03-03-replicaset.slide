@@ -1,0 +1,32 @@
+# ReplicaSet — Keeping N Pods Alive
+
+The simplest controller: keep exactly **N Pods matching a selector** alive.
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: web }
+  template:
+    metadata:
+      labels: { app: web }   # MUST match selector
+    spec:
+      containers: [{ name: app, image: nginx:1.27-alpine }]
+```
+
+## The loop
+
+> count matching Pods → **too few?** create → **too many?** delete → forever.
+
+## Two footguns / facts
+
+- **Selector = template labels** — mismatch → creates Pods it can't see → infinite loop. Rejected at admission.
+- **`ownerReferences`** — owned Pods point back; **deletes cascade**.
+
+## Self-healing
+
+> Delete an owned Pod → replacement in **seconds**, new name. The reconcile loop, live.
+
+*But you rarely write one directly → next section.*

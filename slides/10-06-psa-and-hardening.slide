@@ -1,0 +1,22 @@
+# PSA, etcd Encryption & Image Security
+
+## Pod Security Admission
+
+Blanket policy rejecting non-compliant Pods (replaced PSP).
+
+- **Levels** — `privileged` · `baseline` · **`restricted`** (non-root, drop caps, seccomp)
+- **Modes** — `enforce` (reject) · `audit` · `warn`
+
+```yaml
+labels:
+  pod-security.kubernetes.io/enforce: restricted
+```
+> Migrate: **warn+audit** → fix → **enforce**. Finer → Gatekeeper/Kyverno.
+
+## etcd encryption at rest
+
+> Secrets = base64, **not encrypted**. `EncryptionConfiguration` + `--encryption-provider-config` → `aescbc`/`kms`. **At rest only.**
+
+## Image security
+
+> **Digests** not tags · `imagePullSecret` · **cosign** sign + verify · **Trivy** scan (CI) · **Falco** runtime.

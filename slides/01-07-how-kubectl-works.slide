@@ -1,0 +1,26 @@
+# How `kubectl` Actually Works
+
+`kubectl` is one binary on your laptop. It **doesn't run Pods** — it builds objects and sends them to the api-server.
+
+```
+kubectl  --HTTPS-->  kube-apiserver  -->  etcd
+ reads               authn · authz
+ ~/.kube/config      validate · write
+```
+
+## Four things to lock in
+
+- **Stateless** — reads `~/.kube/config` for URL + credentials. That file *is* cluster access.
+- **api-server is the only writer** — scheduler, kubelet, controllers all go through it; none touch etcd.
+- **Auth at the door** — *who* = your credential; *what* = **RBAC** (notebook 10).
+- **Watch, don't poll** — components stream "tell me when X changes" and react.
+
+## Anatomy of a command
+
+```
+kubectl <verb> <resource> [name] [flags]
+```
+
+- `kubectl get pods` · `describe pod hello` · `logs hello` · `exec -it hello -- sh`
+- **Aliases** — `po` = `pods`; see `kubectl api-resources`.
+- **`-n <ns>`** one namespace · **`-A`** all · **`-o wide|yaml|json`** output.

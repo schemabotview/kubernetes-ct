@@ -1,0 +1,13 @@
+See-kay-ay exam strategy, and where to go next.
+
+The see-kay-ay is two hours, about fifteen to twenty hands on tasks, scored by automated test scripts in a browser terminal. You fix real clusters.
+
+On the time budget. Read the whole question first. The use context instruction at the top of each task is mandatory. Skip it, and you fix the wrong cluster. Skip and return on the hard tasks, because each is worth fixed points, so do not sink thirty minutes into a four point task. And save ten minutes at the end to re-check.
+
+Set up some aliases up front. K for kubectl. An environment variable for client dry run, output as yaml. One for a forced delete. And tab completion.
+
+Now, the single most important muscle memory. Generate, edit, and apply. Run kubectl run, with dry run, output as yaml, redirect it to a file. Edit the file. Then apply it. The same works for create deployment, service, config map, secret, role, role binding, and cron job.
+
+Drill these to under five minutes each, with no docs. A deployment and service. Probes. A config map as both environment and a volume. A role bound to a service account. A default deny network policy. An et-see-dee snapshot and restore. A rolling update and undo. Drain, cordon, and uncordon. And diagnosing pending, crash loop back off, and image pull back off. Watch the common gotchas. The wrong namespace. The wrong context. A selector and template mismatch. And remember, delete pod does not respect disruption budgets, but drain does.
+
+And you are at the end. From, I have never run a pod, to a ten module map of kubernetes. From primitives to cluster operation. Everything rests on four ideas you now own. Declarative state. Controllers that reconcile. Label selectors. And one ay-pee-eye server. Where to go next. See-kay-ay-dee, the developer exam. See-kay-ess, for security, which needs the see-kay-ay first. The gateway ay-pee-eye. Service meshes. And multi cluster. New tools speak the same language. On our map, you can now name every single box. The whole platform, end to end. Good luck with the exam.

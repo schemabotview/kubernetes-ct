@@ -1,0 +1,19 @@
+# Restart Policy
+
+`spec.restartPolicy` — what the **kubelet** does when a container exits. Pod-wide, not per-container.
+
+## The three policies
+
+- **`Always`** *(Pod default)* — restart on any exit. **Long-running services.**
+- **`OnFailure`** — restart only on non-zero. **Batch that retries.**
+- **`Never`** — one shot, win or lose.
+
+## Three subtleties
+
+- **Restart ≠ reschedule** — same node, same Pod, new process. A **node death** needs a controller (Deployment/DaemonSet). *A bare Pod won't survive a lost node.*
+- **CrashLoopBackOff** — fast crashes → kubelet backs off 10s→20s→40s… up to 5 min. Not a phase; the **container** is `Waiting`.
+- **Jobs default to `OnFailure`** — the Job controller owns whole-pod failure.
+
+## The lesson
+
+> `restartPolicy` heals a **crashed process**. It does nothing for a **lost node** — that gap is why Deployments exist.

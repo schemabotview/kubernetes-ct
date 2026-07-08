@@ -1,0 +1,27 @@
+# Ephemeral Volumes
+
+## `emptyDir` — pod scratch
+
+```yaml
+emptyDir: {}                              # node disk
+emptyDir: { medium: Memory, sizeLimit: 512Mi }  # tmpfs
+```
+> **Container** restart keeps it; **Pod** reschedule wipes it. Sidecar IPC, buffers.
+
+## `hostPath` — a node path (footgun ⚠)
+
+```yaml
+hostPath: { path: /var/log, type: Directory }
+```
+> Breaks isolation, non-portable. **Only** node DaemonSet agents (`/var/log`, `/proc`, CNI) + single-node dev. Ties data to **one node**.
+
+## `projected` — many sources, one dir
+
+```yaml
+projected:
+  sources:
+    - configMap: { name: app-config }
+    - secret: { name: db-credentials }
+```
+
+> Plus ConfigMap/Secret/downwardAPI volumes (notebook 05) — all ephemeral, Pod-local.

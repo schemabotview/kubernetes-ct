@@ -1,0 +1,24 @@
+# Pod (Anti-)Affinity
+
+Matches **other Pods'** labels — *"near / away from Pods like this."*
+
+```yaml
+podAntiAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector: { matchLabels: { app: web } }
+      topologyKey: kubernetes.io/hostname
+```
+> *"Not on a node that already has an `app=web` Pod."* → **one Pod per node.**
+
+## topologyKey = the whole game
+
+- **`kubernetes.io/hostname`** — spread across hosts
+- **`.../zone`** — across AZs · **`.../region`** — across regions
+
+> **affinity** = same domain · **anti** = different domain.
+
+## required vs preferred
+
+> **Prefer `preferred` for spreading.** `required` + 3 replicas on 2 nodes → 1 Pod `Pending` forever.
+
+**Uses:** spread replicas · co-locate cache+app · keep 2 DBs apart.

@@ -1,0 +1,19 @@
+The persistent storage abstraction. Persistent volume, claim, and storage class.
+
+For storage that outlives the pod, kubernetes splits the problem in two.
+
+The storage admin provisions storage, and exposes it as a persistent volume. That is a cluster scoped object, representing a real piece of storage, like a twenty gigabyte cloud disk, or an n-f-s share.
+
+The application author asks for storage, by writing a persistent volume claim. That is a namespaced object that says, I want five gibibytes of read write once storage, from the fast s-s-d class.
+
+A controller binds the two together. The pod references the claim by name. The claim is bound to a persistent volume. And the persistent volume is the actual disk.
+
+The decoupling is the whole point. The app says what it needs, in terms of size, access mode, and class. The persistent volume says what is available. And the binding controller matches them. Apps do not know whether they are getting an ee-bee-ess volume, an n-f-s share, or a ceph disk, and they do not have to.
+
+Now, there are two ways the persistent volume side gets created.
+
+Static provisioning. A cluster admin pre-creates persistent volume objects ahead of time. Claims bind to whichever pre-existing volume best fits. This is useful for hand curated storage, like a corporate n-f-s server or an on premises san.
+
+Dynamic provisioning. The admin creates a storage class describing how to make a disk. A claim references the class, and a see-ess-eye provisioner creates a new persistent volume on demand. This is the everyday case in cloud clusters.
+
+Dynamic provisioning needs a storage class, and most managed clusters ship a default. On kind, the default is local path, a directory on the node, which is fine for learning but not for production. On our map, the persistent volume, the claim, and the storage class are three chips of the storage box. And this triangle is the piece the see-kay-ay tests hardest.

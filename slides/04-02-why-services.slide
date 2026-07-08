@@ -1,0 +1,19 @@
+# Why Services Exist
+
+Three nginx Pods, three IPs — **reborn on every restart, rollout, scale.** Now `web` wants to call `api`.
+
+## What the client CAN'T do
+
+- **Hardcode Pod IPs** — change every rollout.
+- **List + filter Pods** — a custom controller inside every client.
+- **Resolve `api-7c9d-x2k5p`** — no per-Pod DNS; random suffix.
+
+## What it wants: a Service
+
+```
+web --http://api:80--> Service ---> a live api Pod
+     DNS: api → 10.96.0.42 (stable VIP)
+     kube-proxy → a healthy pod IP
+```
+
+> The Service **decouples the client from the ever-changing set of Pods** behind it. The client never knows which Pod answered.

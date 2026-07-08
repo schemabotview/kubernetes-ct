@@ -1,0 +1,27 @@
+# RBAC — Roles & ClusterRoles
+
+*Can this subject do this verb on this resource?* Two shapes, different scope.
+
+- **`Role`** — one namespace.
+- **`ClusterRole`** — cluster resources (nodes/PVs), non-resource URLs, or **all** namespaces.
+
+```yaml
+kind: Role
+metadata: { name: pod-reader, namespace: team-a }
+rules:
+  - apiGroups: [""]              # core: Pod, Service, CM
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+```
+
+## Each rule: 3 parts
+
+- **apiGroups** — `""` core · `apps` · `batch` · `networking.k8s.io`
+- **resources** — plural; sub `pods/exec`, `deployments/scale`
+- **verbs** — get/list/watch/create/update/patch/delete · `*` `impersonate`
+
+> exec/logs → `get` on `pods/exec`, `pods/log`.
+
+## The rule that matters
+
+> **RBAC is additive — no deny.** Remove a permission = **delete the binding**.

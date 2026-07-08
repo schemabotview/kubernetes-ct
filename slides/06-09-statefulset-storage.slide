@@ -1,0 +1,25 @@
+# StatefulSets & volumeClaimTemplates
+
+Deployment shares one template → every replica mounts the **same RWO PVC** → can't scale. **StatefulSet** gives each Pod its own.
+
+```yaml
+kind: StatefulSet
+spec:
+  serviceName: cassandra        # headless Service
+  replicas: 3
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: { requests: { storage: 10Gi } }
+```
+
+## What the controller does
+
+> A PVC **per replica**: `data-cassandra-0`, `-1`, `-2`. Restart/reschedule → **PVC stays**; new `cassandra-0` remounts `data-cassandra-0`.
+
+- **Delete STS ≠ delete PVCs** — `kubectl delete pvc -l app=cassandra`. (1.27+ retention policy.)
+
+## Why every DB uses it
+
+> Stable **name** + **network identity** + **storage** — the triplet a replica needs.

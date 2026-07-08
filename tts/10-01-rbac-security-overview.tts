@@ -1,0 +1,11 @@
+Are-back, security, troubleshooting, and see-kay-ay prep.
+
+This is the final module. Nine modules built the platform. This one locks it down, and teaches you to fix it. The two halves the see-kay-ay weighs most.
+
+First, security, from identity to policy. Identity. Users are people, and they are not kubernetes objects. Service accounts are for pods, and they are real objects. Are-back applies to both. Are-back itself. Roles and cluster roles hold permissions, bound to subjects by role bindings and cluster role bindings. It is purely additive, with no deny. And kubectl auth can I verifies. Hardening. The pod security context, for running non root, dropping capabilities, and a read only filesystem. Pod security admission, enforcing a level per namespace. Et-see-dee encryption at rest. And image and supply chain basics.
+
+Second, troubleshooting, which is about thirty percent of the exam. A broken cluster, and you fix it. The key is to know the failure modes, and the first command for each. Application failures, like pending and crash loop back off. Control plane and node failures, like the ay-pee-eye server down, or a node not ready. And networking failures, like a service being unreachable.
+
+And third, see-kay-ay exam strategy. The time budget, the aliases, the imperative dry run muscle memory, and a drill list.
+
+On our map, this module frames the are-back and security boxes of the operate band, then tours the whole map as troubleshooting playbooks. The final section steps back to the full platform. A fitting close, because by now, you can name every box on it.

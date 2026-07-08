@@ -1,0 +1,22 @@
+# Pod IPs & Pod CIDRs
+
+Two ranges, separate from your VPC/LAN.
+
+- **Pod CIDR** — `192.168.0.0/16` (Calico), `10.244.0.0/16` (Flannel).
+- **Service CIDR** — `10.96.0.0/12` (notebook 04).
+
+## Subdivided per node
+
+```
+pod CIDR 192.168.0.0/16
+ ├ node-1 → 192.168.1.0/24 → pods .5 .6 .7
+ └ node-2 → 192.168.2.0/24 → pods .4 .5
+```
+
+> `kubectl get node <n> -o jsonpath='{.spec.podCIDR}'`
+
+> **Route by node:** packet for `192.168.2.0/24` → node-2. The **CNI publishes** these routes (BGP / overlay).
+
+## The gotcha
+
+> `192.168.0.0/16` overlaps corp LANs / home routers. Same range as your VPN → **ambiguous.** Prod picks non-overlapping.

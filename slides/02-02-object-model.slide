@@ -1,0 +1,26 @@
+# The Kubernetes Object Model
+
+Every manifest — Pod, Service, Deployment, Secret — has the **same five keys**.
+
+## The five keys
+
+```yaml
+apiVersion:  # API group + version
+kind:        # object type
+metadata:    # name, namespace, labels — WHO it is
+spec:        # desired state — what YOU want
+status:      # actual state — what the CLUSTER sees
+```
+
+- **apiVersion** — `v1` (core), `apps/v1` (Deployments), `batch/v1` (Jobs), `networking.k8s.io/v1`…
+- **spec = what you want** · **status = what is** (you never write status).
+
+## The reconcile loop — the whole game
+
+```
+spec (you) → controller: observe · compare · act → status (it)
+```
+
+> Every controller runs **observe → compare → act**, forever. Describe the destination; a thousand loops drive the cluster there.
+
+`kubectl apply` updates **spec** → a controller reacts → **status** catches up. Enforced at the **api-server**; the object lands in **etcd**.

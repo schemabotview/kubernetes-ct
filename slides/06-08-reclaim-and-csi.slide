@@ -1,0 +1,24 @@
+# Reclaim Policies & the CSI
+
+## Reclaim policy — on PVC delete
+
+| Policy | Meaning |
+|---|---|
+| **`Delete`** | disk + PV gone. **Data gone.** Dynamic default. |
+| **`Retain`** | keep both → PV `Released`; admin cleans up. Curated storage. |
+| `Recycle` | *deprecated* |
+
+```bash
+kubectl patch pv <pv> -p \
+ '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
+```
+> Set prod DB PVs to **Retain** — defence vs accidental delete.
+
+## Container Storage Interface
+
+K8s can't make an EBS disk — **CSI drivers** do (standard gRPC).
+
+- **controller** (Deployment) — create/delete/snapshot/expand
+- **node** (DaemonSet) — attach + mount into the Pod
+
+> Every backend, same CSI → K8s stays storage-agnostic. `kubectl get csidrivers`. Snapshots/clone/expand = CSI features.

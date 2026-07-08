@@ -1,0 +1,15 @@
+Reclaim policies, and the container storage interface.
+
+First, reclaim policies. When you delete a claim, the bound persistent volume's reclaim policy decides the fate of the underlying disk.
+
+Delete deletes the underlying disk, and removes the persistent volume object too. The data is gone. This is the default for dynamically provisioned volumes.
+
+Retain keeps the disk and the persistent volume object. The volume becomes released, not available, so an admin has to clean it up before another claim can bind. Use this for hand curated, valuable storage.
+
+And recycle is deprecated. Do not use it. Use dynamic provisioning instead.
+
+Dynamically provisioned volumes inherit the policy from the storage class, usually delete. Static volumes set it directly. It is worth switching your production database's volume to retain, even if the storage class says delete. That is defence in depth against an accidental claim deletion. You do it with a kubectl patch. A retained volume stays released, holding the leftover data and a claim reference, until an admin removes that reference.
+
+Now, the container storage interface. Kubernetes does not know how to create an ee-bee-ess disk, or mount n-f-s. See-ess-eye drivers do, through a standard g-r-p-c interface. Each driver is two parts. A controller deployment, which talks to the backend ay-pee-eye, to create, delete, snapshot, and expand volumes. And a node daemon set, which attaches and mounts volumes into the pod. Every backend speaks the same see-ess-eye, so kubernetes itself stays storage agnostic.
+
+You will rarely write see-ess-eye code. For the see-kay-ay, know this. Drivers are helm installed, and referenced by provisioner name in a storage class. Kubectl get see-ess-eye drivers and see-ess-eye nodes list them. And snapshots, clones, and expansion are all see-ess-eye features the driver opts into. Older in-tree drivers are deprecated in favour of these out-of-tree pods. On our map, this is the see-ess-eye chip. The driver beneath the storage class, that does the physical work.

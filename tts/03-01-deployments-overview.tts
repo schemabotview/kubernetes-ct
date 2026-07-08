@@ -1,0 +1,13 @@
+Deployments, replica sets, and rollouts.
+
+Notebook two created pods directly. That is fine for learning, but it is hopeless for production. A bare pod dies with its node, and it cannot be updated without downtime. This module introduces the objects that fix both problems. The controllers that own pods.
+
+Here is the chain to hold in your head. A deployment owns a replica set, and a replica set owns the pods. You write the deployment. There is a replica set per version. And the pods are the running copies.
+
+Let's name the two new objects. A replica set keeps exactly n pods, matching a selector, alive. It is great at maintaining a count, but useless at changing what those pods run. A deployment owns replica sets, one per version. It choreographs the switch between them. That is a rolling update, with history, and a one command rollback.
+
+Everything here is the reconcile loop from notebook two, made concrete. You edit a spec, and a controller drives reality to match it. It creates pods when the count is low. It spins up a new replica set when the template changes. And it scales the old one down as the new one proves healthy.
+
+We will build this up in order. Replica set, then deployment, then scaling, then rolling updates, then rollback, then the update strategies. And then we tour the rest of the workload family. Daemon set, stateful set, job, and cron job.
+
+On our map, this is the workload kinds box, and the rollout box, in the workloads band. It is the machinery that turns, I want three healthy copies of version two, into running pods. And for the see-kay-ay, that three layer ownership, deployment owns replica set owns pod, is one of the most tested pictures on the whole exam. Memorise it.

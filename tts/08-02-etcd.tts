@@ -1,0 +1,11 @@
+Et-see-dee, the cluster's source of truth.
+
+Et-see-dee is a distributed key value store. Every kubernetes object you have ever created, every pod, deployment, config map, secret, namespace, and node, is a row in et-see-dee. If et-see-dee goes away, the cluster's memory goes with it.
+
+The properties that matter. It is strongly consistent, built on the raft consensus algorithm, so reads always see the latest committed write. It is highly available with an odd number of members. Production runs three or five, and can tolerate up to half, minus one, failing. It listens on port twenty three seventy nine for clients, and twenty three eighty for peers, and both use tee-el-ess. And it authenticates clients with certificates. The ay-pee-eye server is its primary client, and uses a dedicated client certificate.
+
+In a kube-adm cluster, et-see-dee runs as a static pod, defined at slash etc slash kubernetes slash manifests slash et-see-dee dot yaml, and started before anything else. The alternative, external et-see-dee, runs on dedicated machines. More moving parts, but better blast radius isolation. Big managed offerings use it.
+
+What is inside. Every object, serialised, under keys like slash registry slash pods, and slash registry slash secrets. You can poke at it with the et-see-dee control tool, but in practice you go through the ay-pee-eye server, with kubectl get. Direct reads are reserved for forensics and backups.
+
+And the one thing to internalise now. Et-see-dee backup is the cluster's life insurance. Lose it, and there are no objects, no volume bindings, nothing. Backup is a snapshot save, and restore is a snapshot restore, plus repointing et-see-dee at the new data directory. We do the actual commands later in this module. On our map, this is the et-see-dee component in the control plane. The one box whose loss is unrecoverable without a backup.

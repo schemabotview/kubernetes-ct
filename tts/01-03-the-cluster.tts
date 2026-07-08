@@ -1,0 +1,23 @@
+The cluster at thirty thousand feet.
+
+A kubernetes cluster is split into two kinds of machines. The control plane, and the worker nodes. Each kind runs a specific set of programs, they talk to each other over the network, and together they form one logical cluster.
+
+Don't try to memorise the boxes yet. Just take away the shape. Let's start with the control plane, the brain of the cluster.
+
+Et-see-dee is a distributed key value store. It is the cluster's single source of truth. Every object you ever create in kubernetes ends up as a row inside et-see-dee.
+
+The kube ay-pee-eye server is the front door. Everything that wants to read or change cluster state goes through it. Your kubectl, every other component, every controller. And here is the key rule. Nothing talks to et-see-dee directly, except the ay-pee-eye server.
+
+The kube scheduler decides which node a new pod should land on.
+
+And the kube controller manager runs the little background loops that watch the world and work to make it match the state you asked for.
+
+Now the worker node, the muscle of the cluster.
+
+The kube-let runs on every worker node. It gets told, you need to run these pods, and it tells the local container runtime to make that happen.
+
+The container runtime is what actually executes containers on the node. Usually that is container-d, the very same thing you met in the docker course. The container runtime interface, the see-are-eye, is how the kube-let talks to it.
+
+And kube proxy, also on every node, is the network plumbing that makes services work.
+
+We will open up each of these properly in notebook eight. For now, hold onto one sentence. The control plane decides, and the nodes execute. On our platform map, that is the entire cluster column. Control plane on the left, worker node on the right.

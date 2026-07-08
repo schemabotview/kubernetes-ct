@@ -1,0 +1,11 @@
+Update propagation. Environment variables versus volume mounts.
+
+The big practical difference between the consumption patterns is what happens when you update the config map.
+
+First, environment variables are baked in. Both config map key ref and env from are resolved once, at pod start. The kube-let reads the config map, builds the environment block, and starts the container. After that, changing the config map does nothing to running pods. To pick up the new value, you have to restart the pod, typically by triggering a rollout, as in notebook three, by bumping an annotation on the template.
+
+Second, volume mounted config maps live update. When a config map is mounted as a volume, the kube-let writes its keys to a small ram backed directory inside the pod. When the config map changes, the kube-let rewrites those files within roughly a minute, which is the sync period. The container sees the new file contents without restarting.
+
+This is great. Your n-ginx config reloads when you apply an updated config map. But it is also a footgun. The container has to actually re-read the file. Many apps load their config once at startup, so the file might be fresh, but the application is still using the old values. The standard fixes are, have the app watch the file, with inotify or a periodic re-read, or trigger a rollout on every config map change, using a checksum annotation in the pod template. That is the common git-ops pattern.
+
+And third, the sub path gotcha. A volume mounted with sub path is not live updated. Sub path lands a single file, for example only n-ginx dot conf into slash etc slash n-ginx, as a separate bind mount that the kube-let does not refresh. If you need live updates, and a single file in a directory you cannot replace, mount the whole config map somewhere harmless and read from there. On our map, this is the env or mount chip. The same config map behaves differently depending on which projection you chose. Environment is frozen at start. A volume is living.

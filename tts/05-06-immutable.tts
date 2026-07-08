@@ -1,0 +1,13 @@
+Immutable config maps, and secrets.
+
+By default, the kube-let watches every config map a pod mounts, so it can notice changes. On a large cluster, thousands of config maps, times thousands of pods, times thousands of nodes, means a lot of watches.
+
+Setting immutable to true on a config map tells the kube-let, this never changes, so do not bother watching it. Once you flip that bit, the config map can only be deleted and recreated. It cannot be edited.
+
+So the manifest sets immutable to true, and it is good practice to put a version in the name, since you cannot edit it in place.
+
+There are two payoffs. Performance, because there is no watch. And safety, because a config cannot be mutated out from under a running release. The same field exists on secrets.
+
+The typical pattern is release versioned config. You ship app config version three alongside deployment web version three, then delete the pair when you tear that version down. The config is born, deployed, and dies with one release, and it is never patched. Tools like kustomize and helm append a hash of the data to the name automatically. So every change effectively mints a new immutable object, and conveniently, it forces a rollout, because the deployment now references a new name.
+
+The trade off is that you lose live update. But for release scoped config, that is exactly what you want. On our map, this is a property of the config map and secret chips in the config box. The same objects, pinned, so that nothing edits them mid flight.

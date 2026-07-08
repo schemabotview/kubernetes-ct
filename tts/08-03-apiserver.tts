@@ -1,0 +1,17 @@
+The kube ay-pee-eye server. The front door.
+
+The ay-pee-eye server is the only thing that ever writes to et-see-dee. It is also the only thing every other component talks to. Killing it does not kill the workloads, they keep running where they are, but it stops the cluster from making any new decisions.
+
+Every request goes through the same five stages. Whether it is a kubectl get, the scheduler watching for new pods, the kube-let patching pod status, or your continuous integration applying a manifest.
+
+Stage one, authentication. Who is this request from. The ay-pee-eye server tries each authenticator in order. Client certificates, bearer tokens, open eye-dee connect, webhook. The first that recognises the credential wins. If none does, four oh one.
+
+Stage two, authorisation. Can this user do this action on this object. Usually are-back, from notebook ten. Match the verb against the user's bound roles. If denied, four oh three.
+
+Stage three, admission control. The request is allowed, but should it be modified, or rejected for policy. Mutating controllers change the request, like the service account controller mounting a token, or the limit ranger filling in defaults. Validating controllers reject it, like resource quota, pod security, or a custom policy webhook.
+
+Stage four, validation. A final schema check against the object kind. If it fails, four twenty two.
+
+And stage five, persistence. The possibly mutated object is written to et-see-dee, and the watchers fire.
+
+This is your debugging map. Four oh one is a bad credential. Four oh three is missing are-back. A webhook error is some operator rejecting you. And four twenty two is a wrong field or version. Kubectl with verbosity eight shows the full h-t-t-p traffic. The flags the see-kay-ay expects you to recognise are all in the ay-pee-eye server's static pod manifest. Where et-see-dee is, the service address range, the authorisation mode, the admission plugins, and the tee-el-ess material. On our map, this is the kube ay-pee-eye server, the center of the control plane. The door that the authentication, authorisation, admission, and validation sequence guards.

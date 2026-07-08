@@ -1,0 +1,35 @@
+# LimitRange & ResourceQuota
+
+Multi-team clusters need guardrails around requests/limits.
+
+## LimitRange — shapes each object
+
+```yaml
+kind: LimitRange
+spec:
+  limits:
+    - type: Container
+      default:        { cpu: 500m, memory: 256Mi }  # limits
+      defaultRequest: { cpu: 100m, memory: 64Mi }   # requests
+      max: { cpu: "4" }   # reject above
+      min: { cpu: 10m }   # reject below
+```
+
+## ResourceQuota — caps the namespace total
+
+```yaml
+kind: ResourceQuota
+spec:
+  hard:
+    requests.cpu: "10"
+    limits.memory: 40Gi
+    pods: "50"
+```
+
+> Over budget → **rejected at creation**. `kubectl describe quota`.
+
+## The distinction (CKA)
+
+> **LimitRange = per-object** defaults + caps · **ResourceQuota = namespace sum.**
+
+> A Quota on requests forces every Pod to set them → **pair with a LimitRange** for defaults.

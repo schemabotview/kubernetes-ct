@@ -1,0 +1,15 @@
+Storage. Volumes, persistent volumes, and persistent volume claims.
+
+A container's writable layer is deleted the moment the container is removed. So restart your database pod, and the data is gone. That is fine for cattle, but fatal for state. This module gives pods storage that outlives them.
+
+Kubernetes offers two levels.
+
+Pod lifetime storage is a volume that lives as long as the pod does. Things like an empty dir, or a config map or secret mount. Good for scratch space, sidecar communication, and mounted config.
+
+Cluster lifetime storage is backed by something external, like a cloud disk or an n-f-s share, that survives pod deletion, node failure, and rescheduling. That is what the persistent volume and persistent volume claim abstraction gives you.
+
+The central design here is a split of concerns. A pod references a persistent volume claim, which is namespaced, and says, I want five gibibytes, read write once. That claim is bound to a persistent volume, which is cluster scoped, and says, here is the disk. And a storage class provisions persistent volumes on demand, using a container storage interface driver.
+
+So the app says what it needs. The persistent volume says what is available. A controller binds them. And a see-ess-eye driver does the real work. The app never knows whether it got an ee-bee-ess volume or an n-f-s share.
+
+We will cover volumes, the ephemeral types, the persistent volume, claim, and storage class triangle, access modes, reclaim policies, the container storage interface, and how stateful sets give each pod its own claim. On our map, this whole module is the storage box in the resources band. Persistent volume, claim, storage class, and see-ess-eye, all resolving onto the pods that mount them.

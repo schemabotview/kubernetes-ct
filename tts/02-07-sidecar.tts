@@ -1,0 +1,15 @@
+Multi container pods, the sidecar pattern.
+
+The pod really earns its keep when you add a helper container. The sidecar pattern is a small companion container that adds a capability to the main container, without changing the main container's image. Common examples are a log shipper that tails the app's files, a service mesh proxy like envoy that intercepts its traffic, and a config reloader that watches a mounted file.
+
+What makes the sidecar pattern work is the shared volume and the shared network.
+
+Picture a pod with two containers. The app container writes the date into a log file every couple of seconds. The log shipper container tails that very same file. Different container, same file, because the volume is mounted into both of them. In a real system, the shipper would forward those lines to a central logging system.
+
+You can read either container's output with kubectl logs, then the pod, then dash c and the container name. The dash c flag is required whenever a pod has more than one container. Otherwise kubectl does not know which one you mean.
+
+Now the shared network, with proof on local-host. If the main container listens on port eighty eighty, the sidecar reaches it at local-host colon eighty eighty. Same network namespace, no dee-en-ess needed. That is exactly how an envoy sidecar can transparently intercept traffic.
+
+And now, when not to use a sidecar. Two independent services that call each other over the network belong in separate pods, behind a service. Only co-locate two containers in one pod when they must share a node, must share a lifecycle, and share the pod's network or storage.
+
+The classic rookie mistake is bundling a web app and its database into one pod. Those are two independent services, with independent scaling and lifecycle needs. They belong in separate pods, with the database fronted by its own service. On our map, this is the sidecar chip inside the pod box. A companion, not a second service.

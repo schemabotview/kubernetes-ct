@@ -1,0 +1,21 @@
+# Cluster Upgrade with kubeadm
+
+Not `kubectl` — run `kubeadm upgrade` on the nodes.
+
+## Version-skew rule
+
+- **kubectl** — ±1 minor of api-server
+- **api-server** — **highest**; others match or trail
+- **cm / scheduler / ccm** — same or 1 older
+- **kubelet** — up to **2** minors older (1.28+)
+- **kube-proxy** — = node's kubelet
+
+> 1.29 api-server serves 1.27 kubelet; **not** the reverse. **Control plane first.**
+
+## Order
+
+1. **1st CP** — `install kubeadm` → `upgrade plan` → `upgrade apply` → drain → kubelet → uncordon
+2. **Other CP** — `kubeadm upgrade node`
+3. **Workers** — drain → kubeadm+kubelet → uncordon
+
+> Pulls images · **rotates certs** · updates manifests + CoreDNS. **Kubelet upgraded separately. One minor at a time.**

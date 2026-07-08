@@ -1,0 +1,26 @@
+# Why Not Write a ReplicaSet Directly
+
+Great at **count**, terrible at **change**.
+
+## The walls you hit
+
+- Editing the image **restarts nothing** — only *new* Pods get it.
+- To roll out you'd **delete Pods by hand** — error-prone at scale.
+- **No history** — old template gone; no going back.
+
+## What you want: the Deployment
+
+```
+   Deployment (v2)      ← you write this
+        │ owns
+  ReplicaSet v2      ReplicaSet v1
+  replicas: 3        replicas: 0   ← kept for rollback
+        │ owns
+      pod pod pod
+```
+
+- **Deployment controller** → makes ReplicaSets.
+- **ReplicaSet controller** → makes Pods.
+- Change template → **new RS up, old RS down**, old kept at `0`.
+
+> CKA gold: **Deployment owns ReplicaSets owns Pods.**

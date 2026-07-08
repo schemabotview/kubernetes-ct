@@ -1,0 +1,11 @@
+Rolling updates, shipping a new version with no downtime.
+
+The most used deployment feature is the rollout. You change something, almost always the container image, and kubernetes replaces pods one batch at a time, keeping at least the replica count minus max unavailable serving traffic the whole time. The quickest way is kubectl set image, then the deployment, then the container and its new image.
+
+So what happens under the hood when the image changes.
+
+First, the deployment controller notices that the template has a new hash. Second, it creates a brand new replica set for the new template, starting at replicas zero. Third, it scales the new replica set up by max surge, while scaling the old one down by max unavailable, in lockstep. With the default twenty five percent on both, and four replicas, that means, new to one, old to three, wait for the new pod to be ready, new to two, old to two, and so on. Fourth, as pods on the new replica set become ready, they take traffic, because services route by selector, which is notebook four. Fifth, when the new replica set reaches the desired count and the old one reaches zero, the rollout is complete. And sixth, the old replica set stays at zero for rollback, with its template preserved exactly.
+
+Now, the speed versus safety knobs. Max surge zero and max unavailable one means, strictly take one pod down before bringing one up. That needs no spare capacity. Max surge one and max unavailable zero means, strictly bring one extra pod up before taking any old one down. That is the always at full capacity choice. And the default, twenty five percent on both, overlaps surge and shutdown, so it is fast, but it briefly uses extra capacity.
+
+They cannot both be zero, because that would mean no progress allowed. You can watch a rollout with kubectl rollout status, which blocks until it finishes or fails, or by watching the pods come and go. On our map, this is the rollout box, lighting up rolling. The new replica set climbing, as the old one drains.

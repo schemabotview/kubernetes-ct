@@ -1,0 +1,22 @@
+# Labels & Selectors
+
+Past a handful of Pods, you stop naming and start **selecting**. **Labels** = key/value pairs for identifying groups.
+
+```yaml
+metadata:
+  labels: { app: web, tier: frontend, version: v2 }
+```
+
+- Convention: **`app.kubernetes.io/*`** — tools understand it automatically.
+- `kubectl label pod web env=prod` · `--overwrite` · `env-` remove · `--show-labels`.
+
+## Selectors — two flavours
+
+- **Equality** — `app=web` · `tier!=frontend` · `a=b,c=d` (**AND**, *no OR*)
+- **Set-based** — `env in (prod,staging)` · `notin` · `release` (exists) · `!release`
+
+Used **everywhere**: `-l`, Service `spec.selector`, Deployment `spec.selector`, NetworkPolicy `podSelector`.
+
+## The deep point
+
+> A selector is a **loose, live query**, not a foreign key. "Any Pod with `app=web`" — re-resolved every moment. **That's what makes rolling updates possible.**

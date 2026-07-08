@@ -1,0 +1,26 @@
+# ConfigMap — the Object
+
+A namespace-scoped **key/value store** Pods reference by name. Strings or whole files.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: app-config }
+data:
+  LOG_LEVEL: "info"
+  app.properties: |
+    server.port=8080
+    cache.ttl=300s
+```
+
+## Two sections
+
+- **`data`** — UTF-8 strings. Nearly every ConfigMap.
+- **`binaryData`** — base64 blobs (keystore, image).
+
+## The key idea
+
+> **Just data.** No `spec`, no `status` — **nothing to reconcile.** The cluster ignores it until a **Pod references it**.
+
+- **1 MiB cap** — an etcd limit. Bigger → object storage / DB / sidecar.
+- Create: YAML, or `kubectl create configmap --from-literal / --from-file`.

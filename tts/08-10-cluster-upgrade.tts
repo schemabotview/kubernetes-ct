@@ -1,0 +1,13 @@
+Cluster upgrade with kube-adm.
+
+You do not kubectl your way to a new kubernetes version. You run kube-adm upgrade on the nodes themselves. The see-kay-ay may ask you to describe the order, and the version skew rules.
+
+First, the version skew rule. Kubectl can be within one minor version of the ay-pee-eye server, either way. The kube ay-pee-eye server is the highest version in the cluster. Everything else matches it, or trails it. The controller manager, scheduler, and cloud controller manager are the same minor as the ay-pee-eye server, or one older. The kube-let can be up to two minor versions older, since kubernetes one point twenty-eight. And kube proxy matches the kube-let on its node.
+
+So a one point twenty-nine ay-pee-eye server can serve one point twenty-eight and one point twenty-seven kube-lets. But a one point twenty-seven ay-pee-eye server cannot serve a one point twenty-nine kube-let. So, control plane first, kube-lets after.
+
+Second, the upgrade order. On the first control plane node, install the new kube-adm, run upgrade plan, then upgrade apply. Then drain the node, upgrade the kube-let and kubectl, restart the kube-let, and uncordon. On each additional control plane node, do the same, but use kube-adm upgrade node, because the first node already did the cluster wide work. And on each worker, drain, upgrade kube-adm, kube-let, and kubectl, restart, and uncordon.
+
+What does kube-adm upgrade actually do. It pulls the new control plane images. It rotates the certificates, a free renewal. It updates the static pod manifests with the new image tags, and the kube-let restarts them. And it updates kube proxy and core-d-en-ess. It does not upgrade the kube-let package. You do that separately.
+
+And you can only upgrade one minor version at a time. One point twenty-seven, to twenty-eight, to twenty-nine. Never skipping. Patch versions are free. This closes the architecture module. You can now name every component, install a cluster, secure it with tee-el-ess, back up et-see-dee, and upgrade. The whole control plane box, operable end to end.

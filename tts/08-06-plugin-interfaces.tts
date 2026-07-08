@@ -1,0 +1,11 @@
+The plug-in interfaces. See-are-eye, see-en-eye, and see-ess-eye.
+
+Kubernetes is small at the core. Three big plug-in points let it talk to whatever runtime, network, and storage you have.
+
+First, the container runtime interface, the see-are-eye. It is a g-r-p-c ay-pee-eye that the kube-let speaks to a local runtime. There are two services. The runtime service, for pod and container lifecycle. And the image service, for pulling and listing images. The kube-let does not know whether container-d or see-are-oh is on the other end of the socket. It just calls the see-are-eye. There is one see-are-eye implementation per node.
+
+Second, the container network interface, the see-en-eye. It is a small jason over standard input spec for, set up a container's network namespace. When the kube-let creates a pod's namespace, it invokes the configured plugin, which allocates a pod address from the node's pool, programs routing so the pod can reach other pods, services, and the internet, subject to network policy, and hands the address back. Common plugins are calico, cilium, flannel, weave, antrea, and the cloud ones. They differ in encapsulation, whether overlay or flat layer three or e-b-p-f, in how they implement network policy, and in performance. Kind ships with kind-net.
+
+And third, the container storage interface, the see-ess-eye, from notebook six. A g-r-p-c ay-pee-eye to storage backends, with one driver per backend.
+
+The point of all three. Kubernetes' job is orchestration. Placing workloads, managing their lifecycle, handling failures. The actual doing, running containers, plumbing networks, attaching disks, is delegated. The same orchestration logic runs on a raspberry pi, or on a thousand node cloud cluster. On our map, the see-are-eye chip sits in the node runtime, with see-en-eye and see-ess-eye as its siblings. The three seams where the small core meets the real world.

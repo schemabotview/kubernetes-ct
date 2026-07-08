@@ -1,0 +1,13 @@
+Troubleshooting. Control plane, and worker nodes.
+
+First, the control plane. If kubectl says connection refused, or eye-oh timeout, the ay-pee-eye server is unreachable. From the control plane node, check three things. Is the static pod running, with see-are-eye-control p-s. Read the kube-let logs, which say why a static pod failed. And check the manifests are still there.
+
+The common causes are, a bad flag you edited into the ay-pee-eye server manifest, where the kube-let logs are explicit. An expired certificate, which you check with kube-adm certs check expiration. Or et-see-dee being down, since the ay-pee-eye server will not start without it.
+
+If pods are stuck container creating cluster wide, it is usually a broken network plugin, which you check by listing the kube system pods, or the kube-let cannot reach the ay-pee-eye server.
+
+And if the scheduler or controller manager is idle, read its logs from the static pod, and look for a lost leader election lease, or a missing are-back permission.
+
+Second, worker nodes. If a node is not ready, read the conditions in kubectl describe node. Ready, memory pressure, disk pressure, p-eye-dee pressure, and network unavailable. Then ess-ess-aitch to the node. Check the kube-let is running, and read its logs backwards to the first complaint. Check the container runtime is up. And check the disk with d-f, because a full disk flips a node to not ready.
+
+The see-are-eye-control tool speaks the see-are-eye directly, which is useful when the kube-let is down. And the quick fixes. Cordon and drain, ignoring daemon sets, for maintenance. Uncordon when fixed. And restart the kube-let. On our map, this section tours the control plane and node runtime boxes. The two places a whole cluster outage originates.

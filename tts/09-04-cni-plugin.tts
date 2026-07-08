@@ -1,0 +1,23 @@
+What a container network interface plugin actually does. Second by second.
+
+When the kube-let creates a pod, from notebook eight, the networking side unfolds in milliseconds. Let me walk it.
+
+One. The kube-let creates the pod's network namespace, via the runtime over the see-are-eye. It is an empty namespace, with only a loopback interface.
+
+Two. The kube-let invokes the container network interface plugin binary, passing the namespace, the container eye-dee, and the config from slash etc slash see-en-eye slash net dot dee.
+
+Three. The plugin allocates an address, from the node's slice of the pod range, via an eye-pee address management plugin, usually host local or calico eye-pam.
+
+Four. The plugin creates a virtual ethernet pair. One end goes into the pod, named e-t-h zero. The other stays on the host.
+
+Five. The plugin programs routes. On the pod side, the host side, and potentially in the cluster's overlay or b-g-p fabric. The pod can now reach out.
+
+Six. The plugin returns the assigned address, and the kube-let records it in the pod's status.
+
+Seven. Kube proxy notices the pod goes ready, after probes pass, and updates the service endpoints. Cluster dee-en-ess starts returning this address.
+
+And eight. The pod's containers start. They see e-t-h zero already configured.
+
+Steps one through six take milliseconds. Whatever your plugin does, v-x-l-a-n encapsulation, b-g-p advertisement, a cloud route, or an e-b-p-f attachment, it does it fast.
+
+To inspect it, kubectl get pod output as wide shows the address. Kubectl exec, then eye-pee address, from inside the pod, shows the namespace's view. And eye-pee link, on the node, shows the host end of every virtual ethernet pair. On our map, this is the see-are-eye, and its sibling the see-en-eye, on the worker node. The mechanism that turns, a pod was scheduled here, into, a pod with a real, wired up address.

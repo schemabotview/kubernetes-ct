@@ -1,0 +1,21 @@
+# The Networking Model — Four Axioms
+
+Every cluster — `kind` to 2000-node — satisfies all four.
+
+1. **Routable IP per Pod** — real IP, dialable from any node.
+2. **Pod↔Pod, no NAT** — source IP preserved; same wherever B runs.
+3. **Node↔Pod, no NAT** — makes probes, `exec`, `port-forward` work.
+4. **One IP** — a Pod sees itself as others see it.
+
+> The **flat, IP-per-Pod model.**
+
+## Trade-off
+
+- **Easier** — every connection IP-to-IP; great for meshes.
+- **Harder to implement** — every node's Pod range routable to every other's → **the CNI's job**.
+
+## NOT mandated
+
+- **How** — overlay / BGP / VPC / eBPF, all valid.
+- **Security** — **every Pod reaches every Pod** by default → NetworkPolicy.
+- Bandwidth / QoS.

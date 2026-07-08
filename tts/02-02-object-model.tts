@@ -1,0 +1,21 @@
+The kubernetes object model.
+
+Open any kubernetes manifest. A pod, a service, a deployment, a config map, even a custom one. And you will find the same five top level keys. Memorise them once, and you will never feel lost in a new manifest again.
+
+The five keys are ay-pee-eye version, kind, metadata, spec, and status. Let's take them one at a time.
+
+Ay-pee-eye version names the ay-pee-eye group the object belongs to. Core objects, like pod, service, config map, and namespace, use v-one. Newer objects carry a group prefix. Apps slash v-one for deployments. Batch slash v-one for jobs. And the networking and are-back groups for ingress, network policy, and roles.
+
+Kind is the object type. Pod, deployment, service, and so on. Always capitalised, and singular.
+
+Metadata is identifying information. Every object has a name, unique within its namespace and kind, an optional namespace, labels, annotations, and some system assigned fields like the u-eye-dee and the creation timestamp.
+
+Spec is what you want. This is your contribution. You write replicas equals three because you want three replicas. You write the image because you want that image.
+
+And status is what is. This is the cluster's contribution. You never write it. The controllers fill it in. Phase running, the pod eye-pee, the conditions. You read status to understand what actually happened.
+
+Now, the relationship between spec and status is the whole game. It is called the reconcile loop. A controller watches the spec, observes the real world, and takes action to close the gap between them. Then it records reality in the status.
+
+Every controller in kubernetes runs that same loop, forever. Observe the world. Compare it to the desired spec. Take action to close the gap. That is exactly why we keep saying declarative. You describe the destination, and a thousand little control loops drive the cluster towards it.
+
+When you kubectl apply a manifest, you are updating the spec. Some controller notices and starts working. And when it is done, the status reflects reality. On our map, all of this is enforced at the ay-pee-eye server, with et-see-dee holding the object that your spec became.

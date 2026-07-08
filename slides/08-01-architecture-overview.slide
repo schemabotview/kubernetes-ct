@@ -1,0 +1,23 @@
+# Cluster Architecture & kubeadm
+
+You've **used** the control plane. Now open it up — the densest chapter, tested heavily.
+
+```
+Control plane                  Worker nodes
+etcd ←→ apiserver ← kubectl    kubelet ─CRI→ runtime → Pods
+         ↑ watch               kube-proxy · CNI
+scheduler  controller-manager
+```
+
+## Four rules
+
+- **Only the api-server touches etcd.** Everything else → api-server.
+- **api-server is stateless** — scalable; state in etcd.
+- **Controllers watch, don't poll** — a long-lived stream.
+- **Nodes don't trust each other** — all authenticate to the api-server.
+
+## The module
+
+> etcd · api-server · scheduler+controllers · node components · CRI/CNI/CSI · static pods · kubeadm · PKI · **etcd backup** · upgrades.
+
+> **The Control Plane + Node runtime boxes** — the Cluster column everything rides on.

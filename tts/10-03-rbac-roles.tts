@@ -1,0 +1,17 @@
+Are-back. Roles and cluster roles.
+
+Are-back, role based access control, is kubernetes' permission system. It answers the authorisation question from notebook eight. Can this subject do this verb, on this resource.
+
+There are two role objects, identical in shape, but different in scope. A role is namespaced, granting permissions on resources in one namespace. A cluster role is cluster scoped, covering cluster scoped resources like nodes, persistent volumes, and namespaces, non resource u-r-ls like slash health-z, or resources across every namespace.
+
+Let's read a role. It has a namespace, and a list of rules. Each rule has three parts.
+
+The ay-pee-eye groups. The empty string means the core group, with pod, service, and config map. Other examples are apps, for deployments, batch, for jobs, and the networking and are-back groups.
+
+The resources. The lowercase plural kind, like pods or deployments. Sub-resources use a slash, like pods slash log, pods slash exec, and deployments slash scale.
+
+And the verbs. Get, list, watch, create, update, patch, delete, and delete collection. Plus a few special ones, star for everything, impersonate to act as another user, and bind and escalate for are-back itself.
+
+Some common combinations. Read only is get, list, and watch. Full control adds create, update, patch, and delete. And to run kubectl exec or logs, you need get on pods slash exec and pods slash log.
+
+And the crucial rule. Are-back is purely additive. There is no way to write, deny x. Permissions accumulate from every binding that names you. To remove a permission, you delete the binding that grants it. On our map, these are the role and cluster role chips in the are-back box. Permission sets that do nothing, until they are bound, which is the next section.

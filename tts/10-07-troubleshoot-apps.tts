@@ -1,0 +1,11 @@
+Troubleshooting. Application failures.
+
+About thirty percent of the see-kay-ay is troubleshooting. The exam gives you a broken cluster, and you fix it. The fastest path is to know the failure modes, and the first command to run for each.
+
+First, a pod stuck pending. Run kubectl describe pod, and read the events section, where the answer lives. Common reasons. Failed scheduling, where no node fits, because of insufficient processor or memory, an untolerated taint, a node selector mismatch, or a volume zone affinity. Failed mount, where a claim is not binding, or the volume is on another node. And image pull back off, where the image does not exist, or the pull secret is wrong.
+
+Second, crash loop back off. Run kubectl logs, with the previous flag, to see the crashed container's logs, which is the key. And kubectl describe pod, to check the restart count and the last exit code. Common reasons. An application bug, usually visible in the logs. Oh-oh-em killed, exit code one thirty-seven, where the container exceeded its memory limit. A missing config, a broken config map or secret reference. Or a failing readiness probe, where the container does not restart, but the pod shows ready zero of one, and the service will not route to it.
+
+Third, a pod that cannot reach a service. Run kubectl get endpoints. None means a selector mismatch, or the pods are not ready. Kubectl describe service shows the selector and addresses side by side. Then from a sibling pod, n-s-lookup the service to check dee-en-ess, and use n-c to check the port.
+
+And for minimal images, like distroless or scratch, use kubectl debug. It attaches an ephemeral debug container that shares the pod's process namespace. There is also a node variant, kubectl debug node, which mounts the node's root at slash host. On our map, this section frames the pods box. Where most, it is broken, tickets land, and the describe, logs, and debug verbs that diagnose them.

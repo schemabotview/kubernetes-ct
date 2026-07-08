@@ -1,0 +1,22 @@
+# kube-apiserver — the Front Door
+
+**Only** writer to etcd. **Only** thing every component talks to. Kill it → workloads run, but **no new decisions.**
+
+## Every request: five stages
+
+```
+AUTHN → AUTHZ → ADMISSION → VALIDATION → etcd
+who?    can?    mutate+val   schema
+```
+
+1. **AUTHN** — certs / tokens / OIDC. No match → **401**.
+2. **AUTHZ** — **RBAC**: verb × object. Denied → **403**.
+3. **Admission** — **mutating** (SA token, LimitRanger) + **validating** (ResourceQuota, PodSecurity, Kyverno).
+4. **Validation** — schema. Bad → **422**.
+5. **Persist** → etcd → watchers fire.
+
+## Debugging map
+
+> 401 = bad cred · 403 = RBAC · webhook err = operator · 422 = wrong field. `kubectl --v=8`.
+
+Flags: `--etcd-servers` · `--service-cluster-ip-range` · `--authorization-mode=Node,RBAC`.

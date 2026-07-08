@@ -1,0 +1,23 @@
+Init containers.
+
+Sometimes a pod needs to do something before the main container starts. Fetch a config file, run a database migration, or wait for a dependency to be ready. That is exactly what init containers are for.
+
+Init containers run one at a time, in order, to completion, before any main container starts. If one of them fails, the pod's restart policy decides what happens next. Always or on failure will keep retrying. Never marks the whole pod as failed.
+
+Let's walk a concrete example. The pod has one init container, called prepare content, running busybox. It writes a small file into a shared volume called h-t-m-l. Then the main container, n-ginx, mounts that same volume and serves the file.
+
+The sequence goes like this. The pod is scheduled. The init container starts and writes into the shared volume. It exits cleanly with code zero. Then the main container starts, mounts the same volume, and serves the file the init container wrote.
+
+Here is what to internalise about init containers.
+
+They use the same spec as main containers. The same image, environment, and volume mount fields. Anything a main container can do, an init container can do too.
+
+They are sequential. The init containers field is a list, processed top to bottom. Order matters.
+
+They share the pod's volumes and network. That is precisely how they hand work off to the main containers. Write to a shared empty-dir, and the main container reads it.
+
+Their resources are not simply added up. The pod's effective request is computed using the largest init container against the sum of the main containers. Notebook seven covers this properly.
+
+And the initialized condition flips to true only after the very last init container succeeds.
+
+On our map, this is the init containers chip inside the pod box. It is the run once preamble that the kube-let completes before the real workload begins.

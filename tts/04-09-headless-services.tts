@@ -1,0 +1,15 @@
+Headless services. Dee-en-ess to pod addresses, with no virtual address.
+
+Sometimes you do not want a virtual address at all. You want clients to see the individual pod addresses, so they can connect to a specific replica, or to all of them. That is a headless service. You make one by setting cluster eye-pee to the literal value none.
+
+So the manifest looks like a normal service, but with cluster eye-pee set to none, which is the magic word for headless.
+
+This has three effects. First, no cluster eye-pee is allocated, and no kube proxy rules are written. There is no virtual address to connect to. Second, dee-en-ess for the service name returns multiple address records, one per ready pod. A standard resolve then pick one client gets every pod's address. And third, endpoint slices still exist. The endpoints controller still tracks the ready pods.
+
+Two use cases dominate.
+
+First, stateful sets. The canonical setup pairs a headless service with a stateful set, giving per pod dee-en-ess, of the form pod dot service dot namespace dot svc dot cluster dot local. That is exactly how databases like cassandra find their peers. Cassandra zero dot cassandra, cassandra one dot cassandra, and so on. Notebook six comes back to this.
+
+Second, client side load balancing. Some clients, like g-r-p-c, kafka, or anything with a connection pool, want to manage their own connection to every backend, rather than have kube proxy round robin connections behind their back. They look up the headless service, learn every endpoint address, and open a long lived connection to each.
+
+But remember, a regular cluster eye-pee is the right default. Headless is the building block under stateful sets, and a tool for specific client patterns. It is not a general upgrade. On our map, it is still the service chip, but resolving to each pod individually, rather than one shared virtual address.

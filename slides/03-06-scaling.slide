@@ -1,0 +1,26 @@
+# Scaling — Changing the Count
+
+One field; the controller does the rest.
+
+```bash
+kubectl scale deployment web --replicas=5   # fastest
+kubectl edit deployment web                 # or spec.replicas + apply
+```
+
+## What happens
+
+- **Scale up** — RS sees shortfall → new Pods: `Pending → … → Ready`.
+- **Scale down** — RS deletes excess. Prefers **NotReady**, then packed nodes, then oldest. `SIGTERM` → grace → `SIGKILL`.
+
+## The exam trap
+
+> **Scaling ≠ a rollout.** Same template, same generation — **no new ReplicaSet**, nothing in `rollout history`.
+
+## HPA — a glance
+
+```bash
+kubectl autoscale deployment web \
+  --min=2 --max=10 --cpu-percent=70
+```
+
+> Delegates `replicas` to a metric — polled ~15s. Full story in **notebook 07**.

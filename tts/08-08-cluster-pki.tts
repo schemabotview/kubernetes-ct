@@ -1,0 +1,13 @@
+The cluster public key infrastructure. Who has what certificate.
+
+A kubernetes cluster is held together by tee-el-ess. Almost every component talks to almost every other over h-t-t-p-s, and identities are proven with x five oh nine client certificates.
+
+A kube-adm cluster has two certificate authorities by default. The kubernetes certificate authority signs all the front end certs, like the ay-pee-eye server and the kube-let clients. And the et-see-dee certificate authority signs et-see-dee's own server and peer certs. There is also a third, the front proxy authority, used by the aggregation layer for extension ay-pee-eye servers like the metrics server.
+
+The certificates by role live in slash etc slash kubernetes slash p-k-i. The ay-pee-eye server's own tee-el-ess cert. A client cert for the ay-pee-eye server to reach the kube-let. Another for the ay-pee-eye server to reach et-see-dee. And et-see-dee's server and peer certs. Plus, each node's kube-let has its own certificate, which modern clusters auto rotate before it expires.
+
+The control plane components do not read certs directly. They read kube config files, which bundle a cert, a key, and the ay-pee-eye server address. Admin dot conf is for humans, and you never commit it. Plus kube-let, controller manager, and scheduler config files. Your laptop's kube config is the same format.
+
+Now, the certs kube-adm issues have a one year lifetime by default. You renew before they expire. Kube-adm certs check expiration shows what is expiring when. And kube-adm certs renew all renews everything, which needs a control plane restart.
+
+The see-kay-ay loves this question. Your cluster stopped working a year after install, what is wrong. The answer is, the certs expired. Kube-adm upgrade also rotates them as a side effect. On our map, this section frames the kube ay-pee-eye server. The tee-el-ess hub that every certificate ultimately serves.

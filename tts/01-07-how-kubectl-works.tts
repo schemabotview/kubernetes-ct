@@ -1,0 +1,19 @@
+How kubectl actually works.
+
+When you typed kubectl run hello, you used the kubectl client, a single binary on your laptop. But kubectl did not run the pod itself. It built an object, and it sent that object to the ay-pee-eye server.
+
+There are a few things to lock in here.
+
+First, kubectl is stateless. It reads a file, tilde slash dot kube slash config, to find the ay-pee-eye server address and your credentials. Then it makes https calls. Anyone who holds that file can drive the cluster, so guard it.
+
+Second, every component talks to the ay-pee-eye server. The scheduler, the kube-let, the controllers, and even kubectl. None of them talk to et-see-dee directly. The ay-pee-eye server is the only writer.
+
+Third, authentication and authorisation both happen at the ay-pee-eye server. Who you are comes from the credential in your kube config. What you are allowed to do is decided by are-back, which we cover in notebook ten.
+
+And fourth, the watch model. Components like the scheduler and the kube-let do not poll the ay-pee-eye server. They open a streaming watch, saying tell me whenever a pod changes, and they react. That is how the cluster stays responsive without hammering the ay-pee-eye.
+
+Now, the anatomy of a kubectl command. Most commands read as kubectl, then a verb, then a resource, then an optional name, then flags. For example, kubectl get pods lists all pods. Kubectl describe pod hello gives verbose details and recent events. Kubectl logs hello shows the container's output. And kubectl exec, with the interactive and tee-tee-wy flags, then double dash, then s-h, opens a shell inside the pod.
+
+A few conventions worth memorising. Resource names pluralise and have short aliases. Pod, pods, and p-o all mean the same thing. Run kubectl api resources to see them all. Pods live in namespaces. The default one is literally called default. The namespace flag targets another one, and the all namespaces flag spans every namespace. And the output flag is critical for the exam. Output as wide, as yaml, as jason, or a jason path expression for a single field.
+
+When you troubleshoot, you are always bridging two views. What the ay-pee-eye server thinks the state is, and what the node actually runs. On our map, that is the arrow from the client into the ay-pee-eye server, the single door that everything passes through.

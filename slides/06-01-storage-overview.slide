@@ -1,0 +1,21 @@
+# Storage: Volumes, PVs & PVCs
+
+A container's writable layer is **deleted on removal** — restart your DB Pod, data gone. This module gives Pods storage that **outlives** them.
+
+## Two levels
+
+- **Pod-lifetime** — a **volume**: `emptyDir`, ConfigMap/Secret mounts. Scratch, IPC, config.
+- **Cluster-lifetime** — external disk (cloud/NFS) surviving Pod & node death. **PV / PVC**.
+
+## The split of concerns
+
+```
+Pod →ref→ PVC ("want 5Gi RWO") →bound→ PV ("here's the disk")
+              ↑ StorageClass provisions on demand (CSI)
+```
+
+> App says **what** it needs · PV says **what's available** · a controller **binds** · **CSI** does the work. App never knows EBS vs NFS.
+
+**The arc:** volumes → ephemeral → PV/PVC/SC → access modes → reclaim → CSI → StatefulSet storage.
+
+> Lives in the **Storage** box: **PV · PVC · StorageClass · CSI**.

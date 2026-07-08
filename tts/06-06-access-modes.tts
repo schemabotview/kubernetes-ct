@@ -1,0 +1,11 @@
+Access modes and volume modes.
+
+A claim says how the workload wants to use the volume. There are two orthogonal axes.
+
+First, access modes. Read write once, code are-double-you-oh, means one node can mount it read write. That is the default and most common. Pods on the same node can share it. Read only many, code are-oh-ex, means many nodes can mount it read only, which is rare. Read write many, code are-double-you-ex, means many nodes can mount it read write. That requires a backend that supports it, like n-f-s, ceph f-s, or azure files. It is not supported by cloud block storage like ee-bee-ess or persistent disk. And read write once pod, code are-double-you-oh-pee, means only one pod in the entire cluster can mount it. That is stronger than read write once, and available since kubernetes one point twenty-seven.
+
+A claim requests one or more access modes, and the bound persistent volume must support at least one. Here is the practical trap. Cloud block storage gives you read write once. So a deployment with one claim cannot easily scale to two replicas, because a second replica scheduled on a different node cannot mount the same read write once disk. That is exactly why stateful, multi replica systems use stateful sets with per pod claims, which we cover in a few sections.
+
+Second, volume modes. Filesystem is the default. The volume is formatted and mounted at the mount path, giving you files and directories. That is ninety nine percent of workloads. Block mode exposes the volume as a raw block device, so the container sees a device like slash dev slash x-v-d-a. That is used by apps that manage their own on disk format.
+
+On our map, both are properties of the claim chip. The request that has to be honoured by a compatible persistent volume. And the see-kay-ay loves that read write once cannot scale gotcha.

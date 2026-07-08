@@ -1,0 +1,20 @@
+# Update Propagation
+
+*What happens when you edit the ConfigMap?* Depends on the projection.
+
+## Env vars — baked in
+
+> `configMapKeyRef` + `envFrom` resolve **once at pod start**. Edit later → **nothing** to running Pods.
+
+Pick up changes → **restart / rollout** (bump a template annotation).
+
+## Volume mounts — live-update
+
+> `tmpfs` files **rewritten within ~1 min** of a change. Container sees new contents **without restarting**.
+
+- **Footgun** — the app must **re-read** the file. Many load once → still using old values.
+- Fixes: **watch the file** (inotify), or **rollout on change** (checksum annotation).
+
+## `subPath` gotcha
+
+> **`subPath` mounts do NOT live-update** — separate bind mount. Need both? Mount the whole CM elsewhere.

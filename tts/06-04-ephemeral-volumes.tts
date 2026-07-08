@@ -1,0 +1,9 @@
+Ephemeral volume types. Empty dir, host path, and projected.
+
+First, empty dir. It is scratch space, shared within the pod. A brand new empty directory, created when the pod is scheduled, and deleted when the pod is removed. Restarts of the container keep it. But rescheduling the pod to a new node wipes it. By default it is backed by the node's disk, but you can set the medium to memory, to get a fast ram disk that counts against memory limits. Use empty dir for sidecar communication, like the log shipper pattern, for fast per pod scratch space, and for buffers that genuinely do not need durability.
+
+Second, host path. This mounts a path on the node into the pod. And it is a footgun. It punches a hole through the pod's isolation, it exposes node internals, and it makes the pod non portable. The legitimate uses are narrow. Node level daemon set agents that must read host paths, like log shippers reading slash var slash log, metrics agents reading slash proc, and container network plugins writing their config. Plus single node development. For everything else, including persistence, use a persistent volume. Host path ties the pod's data to one specific node, and the next time the scheduler picks a different node, the data is gone.
+
+Third, projected. This combines multiple sources into one mount. You can mount several config maps, secrets, and downward ay-pee-eye items into the same directory. That is useful when an app expects all its config under one path, like slash etc slash app, but the data comes from different sources.
+
+And finally, the config map, secret, and downward ay-pee-eye volumes you already met in notebook five. They are ephemeral too, materialised by the kube-let at mount time. On our map, these are all pod local volumes. The ephemeral cousins of the durable storage box, which we turn to next.

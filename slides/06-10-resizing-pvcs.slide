@@ -1,0 +1,20 @@
+# Resizing PVCs
+
+10Gi full → want 20. If `allowVolumeExpansion: true` + driver supports it:
+
+```bash
+kubectl patch pvc data -p \
+ '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
+```
+
+> Controller resizes the disk → kubelet expands the filesystem **online, no restart.**
+
+## Constraints
+
+- **Grow only** — smaller is rejected.
+- **Not every driver** — `local-path` no; cloud usually yes.
+- **`FileSystemResizePending`** condition until FS expansion done.
+
+> `allowVolumeExpansion: false` → patch **rejected**. Fix = edit SC + recreate PVC = **data migration**. **Set it up front.**
+
+**Storage module done:** provision · bind · access mode · reclaim · StatefulSet · grow.

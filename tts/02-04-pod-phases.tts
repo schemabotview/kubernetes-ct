@@ -1,0 +1,13 @@
+Pod phases, conditions, and container states.
+
+A pod's status gives you three overlapping views, and each one answers a different question.
+
+The first view is the phase. It is a single, mutually exclusive word. Pending means the pod is accepted, but a container has not started yet, usually scheduling or an image pull. Running means it is scheduled, all containers are created, and at least one is up. Succeeded means all containers exited cleanly and will not restart. Failed means all terminated and at least one failed. And unknown means the node stopped reporting in.
+
+The second view is the conditions. Each condition is either true or false, and they flip in a fixed order. Pod scheduled, when a node was picked. Initialized, when all init containers finished. Containers ready, when every readiness probe passes. And ready, when the pod itself can receive traffic. Here is a useful pattern. A pod stuck on a failing image pull will show pod scheduled true, but initialized false and ready false. And the message field tells you exactly why.
+
+The third view is the per container status. Each container is in one of three states. Waiting, with a reason like container creating, image pull back off, or crash loop back off. Running, with a started at time. Or terminated, with an exit code and a finished at time. There is also a restart count. A growing restart count is a red flag, even while the pod still reads as running.
+
+So when a pod is unhealthy, your first three commands are these. Kubectl get pods, for the phase and restart count at a glance. Kubectl describe pod, for the conditions, events, and container reasons. And kubectl logs, with the previous flag, for what the application said before it died.
+
+Describe is the workhorse. Its events section, right at the bottom, is the single richest source of what just went wrong. On our map, you are reading the state that the kube-let reports up about each pod. It is the actual half of the spec and status pair.

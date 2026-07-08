@@ -1,0 +1,22 @@
+# Why Ingress & Ingress Controllers
+
+## LoadBalancer per Service = expensive + rigid
+
+- Separate cloud LB each (**$$/mo**, own IP)
+- **No HTTP routing** (`/api` vs `/static`)
+- No TLS termination · no host sharing
+
+## Want: one entry → many Services
+
+```
+api.example.com      → Ingress → Service api
+www.example.com/api* → ctrl    → Service api
+www.example.com/*    → (1 LB)  → Service web
+```
+
+## Resource vs controller
+
+> `Ingress` = **declarative config, does nothing alone.** An **ingress controller** watches it + configures the proxy. No controller → just YAML in etcd.
+
+- **ingress-nginx** (most) · Traefik · HAProxy · AWS ALB · GKE. **One per cluster.**
+- **`IngressClass`** → `spec.ingressClassName`. LB is **per controller, not per Ingress** = the saving.

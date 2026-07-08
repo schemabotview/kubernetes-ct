@@ -1,0 +1,19 @@
+The scheduling problem. What the kube scheduler does.
+
+When you apply a deployment, controllers create the replica set and the pods, and the ay-pee-eye server writes them to et-see-dee with the node name empty. The pods are pending. No node has been chosen yet.
+
+The kube scheduler takes over, with a tight loop.
+
+First, it watches the ay-pee-eye server for pods with no node name.
+
+Second, it filters the nodes. It keeps only those that could run the pod. Enough free processor and memory, taints tolerated, node selectors satisfied, and volumes available in the right zone.
+
+Third, it scores the survivors. A number from zero to one hundred, for how good a fit each one is.
+
+Fourth, it binds. It writes the node name onto the best node, via the ay-pee-eye server's bind subresource.
+
+And fifth, the kube-let on that node sees its own name on the pod, pulls the image, and starts the container.
+
+Three things to internalise. The scheduler runs nothing. It only decides. The kube-let runs it. It is a controller, with the same read, act, write loop as everything else. And it is pluggable. A cluster can run multiple schedulers, or replace the default. Most do not.
+
+The rest of the module is the inputs that bias this decision. How much you ask for, where you will fit, where you will not, and where you want to spread. On our map, this is the kube scheduler component in the control plane. The target that every scheduling chip points at.

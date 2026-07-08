@@ -1,0 +1,13 @@
+Are-back. Bindings, subjects, and auth can I.
+
+A role is just permissions. It does not apply to anyone, until you bind it.
+
+There are two binding objects. A role binding is namespace scoped, and binds a role, or a cluster role, to subjects in one namespace. A cluster role binding is cluster scoped, and binds a cluster role across the whole cluster.
+
+A binding lists subjects, and a role reference. Each subject is one of three kinds. A user, with the username your authenticator returned. A service account, with a name and namespace. Or a group, with the group name.
+
+Here is a powerful crossover trick. A role binding can bind a cluster role, not just a role. When it does, the cluster role's permissions apply only in that binding's namespace. So you can define one pod reader cluster role, and bind it per namespace. That is the standard reuse across namespaces pattern.
+
+To verify, use kubectl auth can I, the single most useful are-back command. It asks the ay-pee-eye server, would this verb on this resource be allowed for me, right now. You can check yourself, impersonate another user with the as flag, or ask, can I do star star across all namespaces, to check if you are cluster admin.
+
+Some ship with defaults. Four cluster roles to know. Cluster admin is everything, everywhere. Admin is full control of a namespace, but not the namespace itself or its quotas. Edit is read write on workloads, but cannot manage are-back. And view is read only, and deliberately excludes secrets. These roles are aggregated. You can extend view by adding a cluster role labelled aggregate to view true, and it folds in. Do not bind directly to the system roles. And for the exam, create roles and bindings imperatively, with dry run, output as yaml. On our map, these are the role binding, cluster role binding, and subject chips. The wires that turn permissions into access, gating the arrow to the ay-pee-eye server.

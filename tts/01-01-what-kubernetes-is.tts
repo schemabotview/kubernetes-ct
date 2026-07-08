@@ -1,0 +1,19 @@
+What kubernetes is, and the shape of the whole platform.
+
+If you ask ten people what kubernetes is, you get ten answers. Here is the cleanest one. Kubernetes runs containers across a fleet of machines for you. It restarts them when they die, it replaces them when a whole machine dies, and it gives them a stable way to find each other. That one sentence does a lot of work, so let's pick it apart.
+
+A fleet of machines. Kubernetes assumes you have more than one server. They might be physical, virtual, on premises, or in the cloud. Each machine is called a node. A small group of nodes runs kubernetes itself, and we call that the control plane. The rest run your containers, and we call those the worker nodes.
+
+It runs containers for you. You don't tell kubernetes to start this container on that specific server. You tell it you want three copies running somewhere in the cluster, and kubernetes decides where. That decision, which container lands on which node, is called scheduling.
+
+It restarts them when they die. If a container crashes, kubernetes notices and starts a fresh one. If an entire machine dies, kubernetes notices, marks the containers on it as lost, and starts replacements on the surviving nodes. You declare the state you want, and kubernetes works to maintain it.
+
+And it gives them a stable way to find each other. Pod eye-pee addresses change all the time. So kubernetes gives you a service, a stable name and a stable address that always points at whichever pods are currently alive.
+
+The name is greek for helmsman, the person steering the ship. The abbreviation k-eights is just the letter k, then eight letters, then s. People also just say kube.
+
+Now, the shape of the whole platform. Picture one wide map. On the left, the client, which is the kubectl command. In the middle, the cluster, split into a control plane and the worker nodes. On the right, the registry that holds your images. Below sit the workloads, the resources like storage networking and config, and the operational concerns like scheduling, are-back, and security.
+
+Everything points at one box in the center, the ay-pee-eye server. Kubectl writes to it, the controllers watch it, the kube-let executes its decisions, and every workload, resource, and policy eventually resolves onto the pods it governs. Hold that picture in your head. The whole rest of this course is a guided tour of this one map.
+
+Why does this matter. In twenty twenty-six, running containers in production mostly means running kubernetes. It is the default across the big managed clouds, on premises, on laptops, and in continuous integration. And the certified kubernetes administrator exam, the see-kay-ay, is the credential this course takes you toward.

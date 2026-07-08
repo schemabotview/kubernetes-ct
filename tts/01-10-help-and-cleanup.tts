@@ -1,0 +1,17 @@
+Getting help, and cleaning up.
+
+You will not memorise every flag of every command, or every field of every object. And you don't need to, because kubernetes ships its own reference.
+
+Kubectl dash dash help gives you the top level command list. Kubectl, then a verb, then dash dash help, gives you the flags for that one verb, like kubectl run dash dash help.
+
+Kubectl explain, then a resource, describes the fields of an object kind, and it works offline. Pair it with a dotted path to drill in. Kubectl explain pod dot spec dot containers shows the container fields. This really is the ay-pee-eye reference, right there on disk.
+
+And kubectl api resources lists every kind the cluster knows about, with its short name, its ay-pee-eye group, and whether it is namespaced.
+
+For deeper docs, kubernetes dot eye-oh slash docs is canonical. Its concepts and tasks sections are excellent. And the key insight for the exam. The see-kay-ay is open book against exactly those pages. So the flow when you are stuck is this. Kubectl explain for what fields does this have. Kubectl verb dash dash help for what flags does this take. Then the docs site for tutorials.
+
+Now, cleaning up. A few hours into kubernetes and you will have stray pods, leftover deployments, and orphaned config maps. There are two ways to clean. Targeted, with kubectl delete pod and a name, or kubectl delete dash f and a file to remove whatever that file describes. And bulk, with kubectl delete, a kind, and the all flag, which clears every object of that kind in the namespace. Take care with that one, it really does delete.
+
+And the whole cluster, when you are done for the day. Kind delete cluster, with your cluster name. The entire cluster comes down in seconds. That throwaway-ness is the whole point of using kind for learning. Break it, delete it, recreate it, with no consequences.
+
+On our map, you have now seen the whole kubectl column of verbs. The rest of the course zooms the camera into each subsystem those verbs drive.

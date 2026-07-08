@@ -1,0 +1,19 @@
+Storage class, and dynamic provisioning.
+
+A storage class is the recipe for, how do you make a new disk.
+
+Let's walk the fields that matter day to day.
+
+The provisioner names which see-ess-eye driver to use. The cluster has these installed, and you reference them. Common ones are the ee-bee-ess driver on a-double-you-ess, the persistent disk driver on google cloud, and the local path provisioner on kind.
+
+The parameters are driver specific. The ee-bee-ess driver takes a type and an eye-ops number. The n-f-s driver takes a server and a share.
+
+The reclaim policy is almost always delete for dynamically provisioned classes, and retain for hand curated ones. That is the next section.
+
+The volume binding mode is either immediate, which picks a volume when the claim is created, or wait for first consumer, which waits until a pod schedules, then provisions the disk in the pod's zone. Use wait for first consumer whenever the storage is zonal. Otherwise you risk creating a disk in one zone, and scheduling the pod in another.
+
+And allow volume expansion, set to true, if the driver supports online resize. Most cloud drivers do.
+
+A claim picks a class by name, with the storage class name field. If you omit it, the cluster's default class is used. If there is no default, and you omit the field, the claim stays unbound until you add one. You can list what your cluster has with kubectl get storage class, or the short alias, kubectl get s-c. On kind, you will see standard, or local path, marked as default.
+
+On our map, this is the storage class chip. The factory that turns a claim's request into a real persistent volume, via the see-ess-eye driver below it.

@@ -1,0 +1,17 @@
+Networking, ingress, and network policies.
+
+Notebook four gave you services, which route at layer four to pods. This module goes deeper. The flat, address per pod model underneath. The container network interface that makes it real. Ingress, for layer seven h-t-t-p routing. And network policy, the cluster's built in firewall.
+
+The through line is that kubernetes networking is a small set of axioms, plus pluggable enforcement.
+
+First, the model. Four hard requirements that every cluster satisfies. Every pod gets a routable address. Pods talk to pods with no nat. Nodes can reach pods. And a pod sees itself at the same address others see.
+
+Second, pod ranges and the container network interface. Where addresses come from, and what the plugin does in the milliseconds a pod is born.
+
+Third, the three communication paths. Pod to pod, pod to service, and pod to external. Each routed differently. Almost every, why is this unreachable, question is really, which path, and which layer.
+
+Fourth, ingress. One public entry point, fanning out to many services by host and path, with tee-el-ess. The resource, versus the controller that obeys it. Plus its successor, the gateway ay-pee-eye.
+
+And fifth, network policy. The default open cluster, made default deny, additively, and enforced by the container network interface.
+
+On our map, this whole module is the networking box in the resources band. Service, ingress, network policy, and core-d-en-ess. Plus the see-are-eye and see-en-eye on the worker node that plumb it. Where notebook four was, how do I reach a workload, this is, how does the packet actually travel, and how do I lock it down.

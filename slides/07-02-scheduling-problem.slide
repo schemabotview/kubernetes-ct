@@ -1,0 +1,24 @@
+# The Scheduling Problem
+
+Controllers make Pods with **`nodeName: ""`** → `Pending`. **kube-scheduler** picks the node.
+
+## The loop
+
+1. **Watch** — Pods with no `nodeName`.
+2. **Filter** — nodes that *could* run it (CPU/mem, taints, selectors, volumes).
+3. **Score** — 0–100 best fit.
+4. **Bind** — write `spec.nodeName`.
+5. **kubelet** sees its name → pulls + starts.
+
+```
+Pods(nodeName="") →watch→ scheduler: filter→score→bind
+        →PATCH spec.nodeName→ kubelet starts it
+```
+
+## Three facts
+
+- **Runs nothing** — only decides; **kubelet runs it.**
+- **A controller** — read → act → write.
+- **Pluggable** — can run many; most don't.
+
+> The rest = the **inputs** that bias the decision.

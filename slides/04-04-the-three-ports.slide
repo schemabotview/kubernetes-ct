@@ -1,0 +1,24 @@
+# port · targetPort · nodePort
+
+```yaml
+ports:
+  - port: 80          # Service listens (in-cluster)
+    targetPort: 5678  # container listens
+    nodePort: 31234   # NodePort only — on every node
+    name: http        # required if > 1 port
+```
+
+## The flow
+
+```
+client :port → Service :targetPort → Pod (container)
+external :nodePort → node → same rules   # NodePort only
+```
+
+## The three, precisely
+
+- **`port`** — exposed to in-cluster clients. **Required.**
+- **`targetPort`** — the Pod port; defaults to `port`. **Can be a *named* port** → safer.
+- **`nodePort`** — NodePort/LoadBalancer only; `30000–32767`; auto if omitted.
+
+> **Classic bug:** `targetPort` set to `port` when the container listens elsewhere. **Read it from `containerPort`.**

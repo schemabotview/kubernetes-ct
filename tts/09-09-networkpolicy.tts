@@ -1,0 +1,15 @@
+Network policy. Kubernetes' built in firewall.
+
+Out of the box, the cluster is open. Every pod can reach every other pod, in every namespace. That is deliberate. Orchestration first, security policy as opt in. Network policy is the opt in. It is a namespaced object that, for the pods matching a selector, controls ingress, which is who can talk to them, and egress, which is where they can talk to.
+
+A policy has a pod selector for the target, a policy types list, and ingress and egress rules with from, to, and ports.
+
+There are three semantics to internalise.
+
+One. Default deny, once any policy applies. If no policy selects a pod, its traffic is unrestricted, and the cluster allow all stands. But the moment one policy selects it, that pod becomes deny by default, for the directions listed in policy types, and only the explicitly allowed traffic passes. So a policy of type ingress, with an empty ingress list, is deny all ingress.
+
+Two. Multiple policies are additive, a union. Traffic is allowed if any policy allows it. There are no deny rules, and no precedence. You build coverage from a default deny, plus targeted allows.
+
+Three. Enforcement is the container network interface's job. The ay-pee-eye server stores the object, but the plugin drops or allows the packets. And not every plugin implements it. Calico and cilium do. Flannel and kind-net do not. Apply a policy on a non enforcing plugin, and it silently does nothing.
+
+Now a key gotcha. In the from and to lists, the entries are or-ed. But the selectors within a single entry are and-ed. So a namespace selector plus a pod selector, in the same entry, means, frontend pods that are in team-a namespaces, not either one. Policies also support an eye-pee block, with a see-eye-dee-are and exceptions. The canonical recipe is default deny all, with an empty pod selector and both policy types, then narrow allows. Remembering to re-allow dee-en-ess to core-d-en-ess, on port fifty three. On our map, this is the network policy chip, filtering the arrows into and out of the pods.

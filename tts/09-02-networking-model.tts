@@ -1,0 +1,15 @@
+The kubernetes networking model. Four hard requirements.
+
+The kubernetes networking spec is a small set of axioms. Every cluster, from your laptop's kind, to a managed cluster, to a two thousand node bare metal install, must satisfy all four.
+
+One. Every pod gets its own routable address. Not a nat-ted port mapping, but a real address that other pods, on any node, can dial directly. And the pod sees that address from inside.
+
+Two. Pods can talk to all other pods without nat. Whether the other pod is on the same node or a different one, the source address is preserved end to end. Reaching pod b looks identical, wherever b is running.
+
+Three. Nodes can talk to all pods, without nat. This is what makes the kube-let's probes work, and what lets kubectl exec and port forward proxy through to a pod.
+
+And four. The address a pod sees for itself is the address others see it as. There is no internal versus external address. Docker's default networking violates this, and that is exactly why running plain docker at scale gets painful.
+
+Together, this is the flat, address per pod model. It is easier to reason about, because every connection is just address to address. It is better for service meshes and observability, because sidecars sit on a real interface, not behind a nat. But it is harder to implement, because someone has to make every node's pod range routable to every other node's. That is the container network interface's job, from notebook eight.
+
+Now, what kubernetes does not mandate. It does not say how you achieve the four properties. Overlay tunnels, b-g-p routing, cloud routes, and native e-b-p-f are all valid. It does not say anything about security. By default, every pod can reach every other pod, and network policy changes that. And it says nothing about bandwidth or quality of service. On our map, this axiom set is the foundation under the whole networking box. The flat fabric that services, ingress, and policies all sit on top of.

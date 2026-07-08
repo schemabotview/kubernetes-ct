@@ -1,0 +1,21 @@
+# Access Modes & Volume Modes
+
+## Access modes
+
+| Mode | Code | Meaning |
+|---|---|---|
+| ReadWriteOnce | **RWO** | one **node** RW — default |
+| ReadOnlyMany | ROX | many nodes RO |
+| ReadWriteMany | **RWX** | many nodes RW — **NFS/CephFS only**, not EBS/PD |
+| ReadWriteOncePod | RWOP | one **Pod** cluster-wide (1.27+) |
+
+> PVC requests modes; the PV must support ≥1.
+
+## The CKA gotcha
+
+> Cloud block = **RWO** → a **Deployment + 1 PVC can't scale past 1 replica** (2nd node can't mount). → **StatefulSet + per-Pod PVCs.**
+
+## Volume modes
+
+- **`Filesystem`** *(default)* — formatted, mounted. **99%.**
+- **`Block`** — raw device; app owns the format.

@@ -1,0 +1,24 @@
+# Update Strategies — Rolling vs Recreate
+
+## `RollingUpdate` *(default)*
+
+New RS up, old RS down — `maxSurge` / `maxUnavailable`. **Zero downtime** *if* clean `SIGTERM` + honest readiness.
+
+## `Recreate`
+
+Old RS → `0` **first**, then new up. **Window with zero Pods.** Use when:
+
+- New can't coexist with old (**DB schema migration**)
+- **`ReadWriteOnce`** PV — one mounter at a time
+- **`HostPort`** — two Pods would clash on a node
+
+## What triggers a rollout
+
+- **Fires** — any `spec.template` change (image, env, mounts, probes…)
+- **Doesn't** — `replicas` (a *scale*), `strategy`, `revisionHistoryLimit`, Deployment labels
+
+```bash
+# force a rollout with no real change
+kubectl patch deployment web -p \
+ '{"spec":{"template":{"metadata":{"annotations":{"rolled-at":"NOW"}}}}}'
+```

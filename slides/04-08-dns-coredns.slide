@@ -1,0 +1,27 @@
+# DNS — CoreDNS & the Name Pattern
+
+**CoreDNS** (Deployment in `kube-system`) makes ClusterIPs usable. kubelet points each Pod's `/etc/resolv.conf` at it.
+
+## The pattern
+
+```
+<service>.<namespace>.svc.cluster.local
+```
+
+- **Same namespace** — bare name: `curl http://api`
+- **Cross namespace** — add it: `curl http://api.default`
+
+## What gets a record
+
+- **Service** → `A` at the ClusterIP
+- **Headless** → `A` per Ready Pod (next)
+- **Named port** → `SRV`
+- **Pod DNS** → opt-in; you use **Service** DNS
+
+## When DNS is the culprit
+
+*ClusterIP works, `nslookup` fails* →
+
+1. CoreDNS Pods Running/Ready?
+2. `kube-dns` Service has endpoints?
+3. Pod `/etc/resolv.conf` → kube-dns IP?

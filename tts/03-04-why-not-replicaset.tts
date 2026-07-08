@@ -1,0 +1,15 @@
+Why you almost never write a replica set directly.
+
+Replica sets are great at keeping n pods alive, and terrible at changing what those pods run. Try to update the image on a replica set, and you hit walls.
+
+First, editing the image on an existing replica set does not restart any pods. The new image only applies to pods created from now on. The existing pods keep running the old image.
+
+Second, to actually roll the change out, you would have to delete pods one by one and let the controller recreate them. With three pods that is annoying. With thirty, it is error prone.
+
+And third, there is no history. Once you change the template, the old one is gone. There is no way to go back to last week's version.
+
+What you really want is a controller that owns multiple replica sets, one per version, and choreographs the transition between them, with history and a one command rollback. That is the deployment.
+
+Picture the layers. You write the deployment, at version two. The deployment controller creates a replica set for the current version. The replica set controller creates the pods. Now, when you change the deployment's template, the deployment controller creates a new replica set, and gradually scales it up while scaling the old one down. The old replica set sticks around at replicas zero, so that you can roll back to it.
+
+This three layer ownership, deployment owns replica sets owns pods, is one of the most tested topics on the see-kay-ay. On our map, the deployment chip drives the replica set chip right beside it. Keep that arrow in mind for the rest of the module.

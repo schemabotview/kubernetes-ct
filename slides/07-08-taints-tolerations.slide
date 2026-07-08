@@ -1,0 +1,24 @@
+# Taints & Tolerations
+
+Affinity = pod-side *"I want."* **Taints = node-side *"go away unless opted in."*** → reserve nodes.
+
+```bash
+kubectl taint nodes gpu-node-1 dedicated=gpu:NoSchedule
+```
+
+| Effect | Meaning |
+|---|---|
+| **NoSchedule** | new non-tolerating won't land; existing stay |
+| **PreferNoSchedule** | soft — avoid, don't refuse |
+| **NoExecute** | won't land **+ evicts** existing |
+
+```yaml
+tolerations:
+  - { key: dedicated, operator: Equal, value: gpu, effect: NoSchedule }
+```
+
+> **A toleration UNLOCKS a taint, it doesn't ATTRACT.** Steer with taint **+** `nodeSelector`.
+
+- Built-ins: `not-ready`, `unreachable`, `disk-pressure`, `control-plane:NoSchedule`.
+- Implicit **300s** tolerate of not-ready/unreachable → `tolerationSeconds`.
+- Remove: `…NoSchedule-` (trailing minus).

@@ -1,0 +1,18 @@
+# Pods, Labels & the Object Model
+
+Notebook 01 *ran* a Pod. Now we open it up — and the model **every** object shares.
+
+## Three ideas for the module
+
+- **Same five keys, always** — `apiVersion` · `kind` · `metadata` · `spec` · `status`. Learn once, read any manifest.
+- **`spec` = what you want · `status` = what is** — you write spec, controllers write status; the **gap is the work**. That reconcile loop *is* Kubernetes.
+- **Labels make Pods queryable** — stop naming Pods, start **selecting** them: *"everything with `app=web`."*
+
+## The arc
+
+```
+Pod anatomy → phases · probes → init · sidecar
+        → labels · selectors · annotations · namespaces
+```
+
+> Lives in the **Workloads** band — the **Pod** box and its parts — with a detour to the **api-server** that enforces the model. The Pod is the atom the whole course builds on.

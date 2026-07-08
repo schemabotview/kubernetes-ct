@@ -1,0 +1,31 @@
+# Anatomy of a Pod Manifest
+
+## The minimum that runs
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata: { name: hello }
+spec:
+  containers:
+    - name: app
+      image: nginx:alpine
+```
+
+## The fields you'll actually write
+
+```yaml
+image: nginx:1.27-alpine
+imagePullPolicy: IfNotPresent
+ports: [{ containerPort: 80, name: http }]
+env: [{ name: GREETING, value: hello }]
+command: ["nginx"]          # overrides ENTRYPOINT
+args: ["-g", "daemon off;"] # overrides CMD
+```
+
+## Four gotchas
+
+- **`containerPort` = documentation**, not a firewall. Opens nothing; lets Services name a port.
+- **`command`→ENTRYPOINT, `args`→CMD** — Docker semantics, new words.
+- **`imagePullPolicy`** — `:latest` → **Always**; a real tag → **IfNotPresent**. *Pin your tags.*
+- **Managed Pods get a random suffix** — `web-7c9d8f8b8d-x2k5p`.

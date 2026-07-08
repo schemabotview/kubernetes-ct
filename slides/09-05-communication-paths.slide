@@ -1,0 +1,25 @@
+# The Three Communication Paths
+
+Every Pod connection is one of three — routed differently.
+
+## 1 · Pod → Pod
+
+- **Same node** — host bridges `veth`→`veth`. No overlay/proxy.
+- **Diff node** — CNI routes: Calico BGP (L3 hop) / Flannel VXLAN (UDP encap).
+- **No NAT** — source IP preserved.
+
+## 2 · Pod → Service
+
+> DNS → ClusterIP → **kube-proxy DNATs** to a random Pod. Dest sees the **client's IP** (VIP is virtual).
+
+## 3 · Pod → External
+
+> Pod IP not public → host **source-NATs** to node IP. External sees the **node's IP**. (Pod IP → `externalTrafficPolicy: Local` / egress gw / mesh.)
+
+```
+pod→pod : A → B (direct)
+pod→svc : A → VIP → kube-proxy DNAT → pod
+pod→ext : A → node (SNAT) → internet
+```
+
+> *"Why unreachable?" = which path, which layer.*

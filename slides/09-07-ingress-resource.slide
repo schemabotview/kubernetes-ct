@@ -1,0 +1,25 @@
+# Anatomy of an Ingress
+
+```yaml
+kind: Ingress
+metadata:
+  annotations: { nginx.ingress.kubernetes.io/rewrite-target: / }
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [www.example.com]
+      secretName: web-tls          # kubernetes.io/tls
+  rules:
+    - host: www.example.com
+      http:
+        paths:
+          - { path: /api, pathType: Prefix, backend: { service: { name: api, port: { number: 80 } } } }
+          - { path: /,    pathType: Prefix, backend: { service: { name: web, port: { number: 80 } } } }
+```
+
+- **`tls`** — hostnames → `kubernetes.io/tls` Secret; controller serves HTTPS.
+- **`rules`** — host routing (`Host:` header).
+- **`pathType`** — `Prefix` (`/api`→`/api/foo`) · `Exact`.
+- **Annotations** — rewrite / redirect / timeouts (controller-specific).
+
+> TLS Secret via `kubectl create secret tls` / **cert-manager**. Unmatched → **default backend** (404).

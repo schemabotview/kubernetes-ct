@@ -1,0 +1,18 @@
+# What a CNI Plugin Does — second by second
+
+Pod created → networking unfolds in **milliseconds.**
+
+1. kubelet makes the **net namespace** (via CRI) — just loopback.
+2. kubelet **invokes the CNI binary** (config `/etc/cni/net.d/`).
+3. **Allocate an IP** from the node's slice (IPAM: `host-local` / `calico-ipam`).
+4. **`veth` pair** — `eth0` in Pod, other end on host.
+5. **Program routes** — pod · host · overlay/BGP.
+6. **Return the IP** → `status.podIP`.
+7. **kube-proxy** sees `Ready` → updates endpoints; DNS returns it.
+8. **Containers start** — `eth0` ready.
+
+> Steps 1–6 = ms. VXLAN / BGP / VPC route / eBPF — **fast.**
+
+## Inspect
+
+`get pod -o wide` (IP) · `exec … ip addr` (Pod view) · `ip link` on node (`vethXXXX`).

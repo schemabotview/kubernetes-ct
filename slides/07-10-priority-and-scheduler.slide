@@ -1,0 +1,24 @@
+# PriorityClass & How the Scheduler Decides
+
+## PriorityClass + preemption
+
+```yaml
+kind: PriorityClass
+value: 1000000
+preemptionPolicy: PreemptLowerPriority   # or Never
+---
+spec: { priorityClassName: high-priority }
+```
+
+> Can't fit? Scheduler **evicts lower-priority Pods** to make room (they → Pending).
+
+- Built-ins: `system-cluster-critical` / `system-node-critical` — **not for apps**.
+- `preemptionPolicy: Never` — queue order only, no preempt (batch).
+
+## Filter → Score → Profiles
+
+- **Filter** — pass **all**: `NodeResourcesFit`, `NodeAffinity`, `TaintToleration`, `VolumeBinding`, `NodePorts`, `PodTopologySpread`.
+- **Score** — 0–100: `BalancedAllocation`, `LeastAllocated` (default) vs `MostAllocated`, `ImageLocality`.
+- **Profiles** — `spec.schedulerName`; multiple schedulers.
+
+> Every lever over **where a Pod runs** → resolves at **kube-scheduler**.

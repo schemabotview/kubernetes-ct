@@ -1,0 +1,11 @@
+Core-d-en-ess revisited. Customising cluster dee-en-ess.
+
+You met core-d-en-ess in notebook four. Every cluster ships it as a deployment in the kube system namespace, fronted by a service. The default config is fine for ninety five percent of clusters. Here are the cases that warrant a change.
+
+Core-d-en-ess's config, its core file, lives in a config map named core-d-en-ess. You edit it with kubectl edit config map core-d-en-ess. Each line is a plugin. The interesting ones. The kubernetes plugin, for cluster dot local, is the source of all your service dee-en-ess, reading from the ay-pee-eye server. The forward plugin sends anything not in cluster dot local to the node's upstream resolver. Cache caches positive answers. And reload re-reads the core file when the config map changes, without restarting pods.
+
+The most common customisation is forwarding a custom domain. Say your pods need an internal private hostname, like star dot corp dot internal. You add a server block that forwards that domain to a specific upstream address. Save the config map, and the reload plugin picks it up.
+
+If you need one specific pod to use different dee-en-ess settings, the pod spec supports a d-n-s config. You set the d-n-s policy to none, then provide your own nameservers and options. The d-n-s policy values are, cluster first, the default, which uses core-d-en-ess. Default, which uses the node's resolver. None, which uses only your d-n-s config. And cluster first with host net, for host network pods.
+
+And watch out for the n-dots trap. The default n-dots of five means any name with fewer than five dots tries every search domain first. So curl-ing an external site fires four failing cluster lookups before the real one. Performance sensitive workloads override to n-dots two. This closes the networking module. Model, container network interface, paths, ingress, policy, and dee-en-ess. On our map, it is the core-d-en-ess chip in the networking box. The name layer we have now customised end to end.

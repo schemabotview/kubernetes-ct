@@ -1,0 +1,18 @@
+# The Configuration Problem
+
+Same image → staging `debug`, prod `warn`; swappable backend URL; one TLS cert in three services.
+
+## What doesn't work
+
+- **Bake into the image** — `web:staging` ≠ `web:prod`. **The image you tested isn't the one you ship.**
+- **Command line** — Pods launch from a `template` in etcd, not a prompt. 20 vars = a wall.
+- **Sidecar** — heavy for "set an env var."
+
+## What you want
+
+> A **first-class object** holding config, referenced from Pod templates.
+
+- **ConfigMap** — non-sensitive
+- **Secret** — sensitive
+
+> Near-identical shape; differences are **handling** (base64, encryption, RBAC). Master ConfigMap → Secret follows.

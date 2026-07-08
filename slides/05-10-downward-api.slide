@@ -1,0 +1,30 @@
+# The Downward API
+
+A container needs facts **about itself** — Pod name, IP, node, labels, limits. Not in a CM/Secret; in the **Pod's own object**.
+
+## As env vars
+
+```yaml
+env:
+  - name: POD_NAME
+    valueFrom: { fieldRef: { fieldPath: metadata.name } }
+  - name: POD_IP
+    valueFrom: { fieldRef: { fieldPath: status.podIP } }
+  - name: CPU_LIMIT
+    valueFrom:
+      resourceFieldRef: { resource: limits.cpu, divisor: 1m }
+```
+
+## As files
+
+```yaml
+volumes:
+  - downwardAPI:
+      items: [{ path: labels, fieldRef: { fieldPath: metadata.labels } }]
+```
+
+## Fields
+
+`metadata.name/namespace/labels` · `spec.nodeName` · `status.podIP/hostIP` · `resourceFieldRef` → `limits.cpu/memory` (size a JVM heap).
+
+> Config projects **external** data in; downward API projects the Pod's **own** facts in.

@@ -1,0 +1,15 @@
+Restart policy.
+
+The restart policy field controls what the kube-let does when a container in the pod exits. It applies to all containers in the pod. You cannot set it per container.
+
+There are three policies. Always, which is the default for pods, restarts the container every time it exits, regardless of the exit code. That is the right choice for long running services. On failure restarts only when the container exits with a non zero code. That is right for batch work that should retry on failure but stop on success. And never means never restart. That is right when you want one shot, success or failure.
+
+Now, three subtleties that really matter.
+
+First, a restart is not a reschedule. This is the kube-let restarting the container. Same node, same pod, same volumes, just a fresh container process. If the node itself dies, only a higher level controller, like a deployment, a replica set, or a daemon set, can bring the pod back somewhere else. So a bare pod with restart policy always will not survive a node failure.
+
+Second, crash loop back off. When a container keeps crashing quickly, the kube-let starts waiting longer between restarts. Ten seconds, twenty, forty, up to five minutes. That shows up in kubectl get pods as crash loop back off. It is not a separate phase. The pod is still running from the cluster's point of view. It is the container that is waiting, with that reason.
+
+And third, jobs default differently. A job's pod template defaults to on failure, and the job's own controller handles whole pod failure separately. We will meet jobs in notebook three.
+
+Here is the lesson to carry. The restart policy heals a crashed process. It does nothing for a lost node. That is the exact gap that deployments fill, and it is why almost nobody runs bare pods in production. On our map, the restart policy is a property of the pods box itself. The resurrection across nodes story belongs to the workload kinds sitting above it.

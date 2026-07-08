@@ -1,0 +1,25 @@
+The core pod lifecycle.
+
+A pod moves through a small set of phases. Let's walk them.
+
+It begins in pending. The pod has been accepted, but it is not fully up yet. Maybe it is still being scheduled, or the image is being pulled, or init containers are running.
+
+Then it moves to running. At least one container is up.
+
+From running, a pod that is meant to finish ends in one of two phases. Succeeded, if its containers exited cleanly with code zero. Or failed, if a container exited with a non zero code.
+
+And there is one more phase, unknown, which means the node lost contact with the ay-pee-eye server, so kubernetes simply cannot say.
+
+Now the everyday commands for living with a pod. Kubectl get pods lists them. Add the watch flag to watch live, output as wide to see the node and eye-pee, or the all namespaces flag to span everything.
+
+Kubectl describe pod, then the name, shows events, the image, the eye-pee, conditions, and the last reason a container restarted. It is the single most useful, why is my pod sad, command.
+
+Kubectl logs, then the name, shows the container's output. Add the follow flag to tail it live, or the previous flag to see the previous instance after a crash.
+
+Kubectl exec, with the interactive and tee-tee-wy flags, then the name, then double dash, then a command, runs that command inside the container. The double dash separates kubectl's own flags from the command you want to run.
+
+Kubectl port forward tunnels a local port to a port on the pod, which is handy before a service exists.
+
+And kubectl delete pod deletes it. Here is the key contrast. A bare pod, once deleted, stays gone. But a pod owned by a controller gets a replacement within seconds, because the controller is busy reconciling desired state.
+
+That contrast is the whole lesson. A bare pod is mortal. A controller managed pod is resurrected. On our map, all of this orbits the pods box. The verbs on the left, like logs, exec, and describe, are how you observe it. And its phases are what the kube-let reports back up to the ay-pee-eye server.

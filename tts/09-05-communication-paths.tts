@@ -1,0 +1,11 @@
+The three communication paths.
+
+Once the cluster is networked, every connection a pod makes falls into one of three categories. Each is routed differently in the kernel.
+
+First, pod to pod. The simplest case. Pod a wants to reach pod b by address. The packet leaves pod a's e-t-h zero, crosses the virtual ethernet pair onto the host, and then splits two ways. If b is on the same node, the host bridges directly to b's virtual ethernet. No overlay, no kube proxy. If b is on a different node, the host routes the packet per the container network interface's node routes. With calico in b-g-p mode, it is a plain layer three hop. With flannel v-x-l-a-n, the packet is encapsulated in a you-dee-pee wrapper, sent to the destination node, and unwrapped. No nat either way. Pod b sees pod a's source address unchanged.
+
+Second, pod to service. Pod a calls http colon slash slash api. Dee-en-ess resolves the service's cluster address, from notebook four. Then kube proxy's rules rewrite it, via d-nat, to one of the backing pod addresses, picked at random. Here is the key detail. The destination pod sees the request from the client pod's address, not the service address. The service address is virtual. Only the rule does any rewriting.
+
+And third, pod to external. Pod a wants to fetch a public web site. The pod's address is not routable on the public internet, so the host source nats the packet to its own address before sending. Return traffic gets un-nat-ted on the way back. That is why external services see the node's address, not the pod's, when a pod calls out. To make the pod address visible, which is rare, you need external traffic policy local, an egress gateway, or a service mesh.
+
+These three patterns explain almost every networking question on the see-kay-ay. Why is service x unreachable, turns into, is this path one, two, or three, and which layer is breaking. On our map, path two runs through the service chip and kube proxy. And all three ride the flat fabric under the networking box.

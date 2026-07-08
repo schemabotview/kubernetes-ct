@@ -1,0 +1,15 @@
+Anatomy of an ingress resource.
+
+Let's walk a minimal but realistic ingress, field by field.
+
+At the top, an annotation, like a rewrite target, which is controller specific. Then the spec.
+
+The ingress class name picks which controller handles this ingress.
+
+The tee-el-ess section handles tee-el-ess termination. Each entry binds a list of hostnames to a secret of type kubernetes tee-el-ess, from notebook five. The controller then serves h-t-t-p-s for those hosts, using the certificate in the secret.
+
+The rules section does host based routing. Each rule matches a host header. And within a host, the h-t-t-p paths do path based routing. Each path has a path value, a path type, and a backend service. The path type is usually prefix, which matches a path and everything under it. So slash api matches slash api, slash api slash, and slash api slash foo. Exact matches only the literal path. And the backend names which service and port to route to.
+
+Annotations carry anything controller specific. Ingress n-ginx annotations start with n-ginx dot ingress. And a-double-you-ess a-l-b uses its own prefix. Common cases are rewrite targets, redirecting h-t-t-p to h-t-t-p-s, custom timeouts, and basic auth.
+
+On the certificate side, the secret must be type kubernetes tee-el-ess, and contain a t-l-s dot see-are-tee and a t-l-s dot key. Three ways to get one. Bring your own, with kubectl create secret tee-el-ess. Cert manager, an add on that obtains certificates from let's encrypt automatically, which is the production default. Or the controller's cloud certificate integration. And requests that do not match any rule go to a default backend, usually a tiny pod that returns four oh four. On our map, this is the ingress chip routing down onto the service chips behind it. The concrete wiring of host and path, to a service.

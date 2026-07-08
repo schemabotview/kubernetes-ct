@@ -1,0 +1,28 @@
+# Affinity, Multi-port & Service vs Ingress
+
+## Session affinity
+
+```yaml
+sessionAffinity: ClientIP
+sessionAffinityConfig:
+  clientIP: { timeoutSeconds: 10800 }   # 3h
+```
+
+> Hash by source IP → pin to one Pod. **Only** mode offered. *Breaks behind NAT* — internal use only. Cookie/JWT → Ingress/mesh.
+
+## Multi-port — each port **named**
+
+```yaml
+ports:
+  - { name: http, port: 80, targetPort: 8080 }
+  - { name: grpc, port: 9090, targetPort: 9090 }
+```
+
+## Service (L4) vs Ingress (L7)
+
+| Layer | Object | Speaks |
+|---|---|---|
+| L4 | Service | TCP/UDP, selector |
+| L7 | Ingress + controller | host/path, TLS |
+
+> **Service = the primitive.** Ingress/mesh use Services to find Pods, then add smarter routing. → notebook 09.

@@ -1,0 +1,13 @@
+Resource requests and limits.
+
+Every container can declare what it expects from the node. Two optional fields, both per container. Requests, and limits.
+
+Requests is the minimum amount of resource the scheduler must reserve on the chosen node. When the scheduler filters nodes, it sums the requests of every pod already on the node, and subtracts that from the node's allocatable capacity. A pod can only land if its requests fit in the remaining headroom. Crucially, requests is not a runtime cap. A container that requests a quarter of a processor can use more at runtime, if the node has it free. Requests is purely a scheduling input.
+
+Limits is the maximum amount the runtime will let the container actually use, enforced by the kernel control group. If a container exceeds its processor limit, it is throttled. Slowed down, but no restart. If it exceeds its memory limit, the kernel out of memory kills the offending process, and the container restarts, subject to the restart policy.
+
+On units. For processor, one means one whole core, and five hundred milli-cores means half a core. For memory, the default is bytes, and you use binary suffixes, kibibyte, mebibyte, gibibyte, and tebibyte.
+
+Omissions matter. If requests is omitted but limits is set, requests defaults to the limits. If requests is set but limits is omitted, there is no upper bound, and the container can hog the node. And if both are omitted, the pod schedules anywhere and runs unbounded, which is dangerous in shared clusters. You fix that with a limit range.
+
+There is also a third resource, ephemeral storage, which is the node's local scratch. Empty dir, the writable layer, and logs. It has the same request and limit shape, and the kube-let evicts pods that exceed it. On our map, these are the requests and limits chips in the scheduling box. The numbers the scheduler reserves, and the kernel enforces.

@@ -1,0 +1,15 @@
+Annotations and namespaces.
+
+Annotations are the other half of metadata. Labels are for selection. Annotations are for everything else you want to attach to an object. Same key value shape, living at metadata annotations, but with no length limit, and no use by selectors.
+
+For example, you might annotate an object with an owner email, a description, and a git commit. The uses are human readable notes, build metadata like a git commit or an image digest, and tool configuration. Ingress controllers, service meshes, and operators all read annotations to toggle features on or off, without changing the object's schema. Kubectl apply even stores its last applied state in an annotation. So the rule of thumb is this. If you want to find the object later by some property, use a label. If you want to describe it, or feed data to a tool, use an annotation.
+
+Now, namespaces, which are soft tenancy boundaries. A namespace scopes object names. Default slash web and staging slash web are two distinct objects. Most kinds are namespaced, but a handful, like nodes, persistent volumes, storage classes, and cluster roles, are cluster scoped.
+
+A namespace gives you four things. A name scope, so names only need to be unique within the namespace. An are-back target, so you can grant access to just one namespace. A target for quotas and limits. And a dee-en-ess suffix, so services get a name like service dot namespace dot svc dot cluster dot local.
+
+But notice what a namespace does not give you. It does not give you network isolation. By default, every pod can reach every other pod, regardless of namespace, until a network policy says otherwise. And it does not give you strong tenancy. Namespaces are soft boundaries, good for separating teams or environments within one trusted organisation, not for hostile multi tenancy.
+
+A fresh cluster has four built in namespaces. Default, where your stuff lands. Kube system, where kubernetes' own components live, like core-d-en-ess and the controllers. Kube public, which is world readable. And kube node lease, which holds node heartbeats.
+
+You can switch namespace per command with the namespace flag, or make it stick by setting the namespace on your current context. On our map, namespaces are a slicing of the whole cluster. The same objects, just partitioned. Which is why this section frames the cluster box rather than a single node.

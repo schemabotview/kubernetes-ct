@@ -1,0 +1,25 @@
+# Pod Security Context
+
+Default: **root** + broad capabilities — dangerous. Security context = the fix (container overrides pod).
+
+```yaml
+securityContext:                 # pod
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000
+  seccompProfile: { type: RuntimeDefault }
+containers:
+  - securityContext:             # container
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"], add: ["NET_BIND_SERVICE"] }
+```
+
+- **runAsNonRoot** — **fails to start** as UID 0. Cheapest net.
+- **fsGroup** — non-root can write volumes.
+- **allowPrivilegeEscalation: false** — no setuid path to root.
+- **readOnlyRootFilesystem** — kills drop-a-binary exploits.
+- **drop ALL** caps · **RuntimeDefault** seccomp.
+
+> **`privileged: true`** = off switch — **only CNI/CSI DaemonSets.**
+> Trip-up: `runAsNonRoot` on a root image **fails** → set `runAsUser`.

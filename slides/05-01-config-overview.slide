@@ -1,0 +1,20 @@
+# ConfigMaps, Secrets & Environment
+
+**One image**, many environments — `LOG_LEVEL=debug` in staging, `warn` in prod. Baking config into images breaks that.
+
+> The fix: a **first-class object that holds config**, referenced from Pod templates.
+
+## Two objects
+
+- **ConfigMap** — non-sensitive key/value (strings or whole files).
+- **Secret** — same shape + **security posture**: base64 store, `tmpfs` mount, optional etcd encryption, tighter RBAC.
+
+> Master ConfigMap → Secret is *the same thing plus handling*.
+
+## The module
+
+- **3 ways to consume** — env var · bulk env · volume file
+- The choice sets **whether config live-updates**
+- Immutability · image-pull secrets · **downward API**
+
+> Lives in the **Config** box (+ Registry for pull secrets). Through-line: **the artifact you tested is the artifact you ship.**

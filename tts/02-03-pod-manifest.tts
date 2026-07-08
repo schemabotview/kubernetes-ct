@@ -1,0 +1,21 @@
+Anatomy of a pod manifest.
+
+The smallest valid pod is just four required keys. An ay-pee-eye version of v-one. A kind of pod. Metadata with a name. And a spec that lists one container with a name and an image. That manifest will create a pod and run it.
+
+But almost every pod you meet in the wild carries more fields. Let's walk the realistic version.
+
+Inside the container, you set the image, and an image pull policy of if not present, always, or never. You list ports, giving each a container port number and an optional name. You set environment variables, each with a name and a value. And you can override the image's start-up with command and args.
+
+At the pod level, you set a restart policy, and a termination grace period in seconds, which is the window between the polite stop signal and the forced kill.
+
+Now, four things worth calling out.
+
+First, the container port is documentation, not a firewall. Listing it opens nothing. The container already listens wherever it likes. The field is there so that services can reference a port by name, and so humans reading the manifest know what is exposed.
+
+Second, command overrides the image's entry point, and args overrides the image's command. These are the same semantics you learned in docker, just with different words.
+
+Third, the image pull policy defaults are subtle. If the tag is latest, or omitted, the default is always, meaning pull every time. For any other tag, the default is if not present, meaning only pull if it is missing. This is exactly why pinning a specific tag is not just style. It changes behaviour.
+
+And fourth, a deployment managed pod gets an auto generated suffix. In notebook three you will see names like web, then a random tail. That tail guarantees uniqueness across replicas.
+
+On our map, this is the pod box in the workloads band, zoomed right into its containers. These are the spec fields you will write most often in the entire course.

@@ -1,0 +1,13 @@
+The rest of the workload family.
+
+Deployments cover stateless services, which is the common case. But kubernetes ships four other workload controllers, each for a specific shape of workload.
+
+First, the daemon set. Think, one pod per node. It ensures exactly one copy of a pod runs on every node that matches a selector. Add a node, and a pod appears on it. Remove a node, and its pod is gone. Use it for node level agents. Log shippers, metrics agents like node exporter, networking and storage plugins, and security agents. You will see daemon sets in the kube system namespace. Kube proxy and the container network interface plugin both run as daemon sets.
+
+Second, the stateful set. Think, identity and storage that survive restarts. A deployment treats pods as interchangeable. A stateful set gives them ordinals, pod zero, pod one, pod two, each with a stable name, a stable network identity, and its own persistent volume that follows it across restarts. Use it for stateful systems, like databases, cassandra, kafka, elasticsearch, and consensus systems like et-see-dee and zookeeper. The identity comes through a headless service, in notebook four, and the storage through volume claim templates, in notebook six.
+
+Third, the job. Think, run a pod to completion. It creates pods and watches them until they exit successfully, retrying up to a backoff limit. Use it for batch work, like migrations, reports, and e-t-l pipelines. A job's pod template defaults to restart policy on failure. Parallelism and completions control how many run and how many must succeed.
+
+Fourth, the cron job. Think, a job on a schedule. You give it a cron schedule and a job template. Use it for periodic work, like backups, log rotation, and cache warmers.
+
+So how do you pick one. Ask, does it run forever. If not, is it once, which is a job, or on a schedule, which is a cron job. If it runs forever, does it need a stable identity and per pod storage, which is a stateful set. Or one copy per node, which is a daemon set. Otherwise, it is a deployment. For the see-kay-ay, deployment is the answer most of the time. On our map, all five live in the workload kinds box, and the ownership arrows are the wiring to memorise.

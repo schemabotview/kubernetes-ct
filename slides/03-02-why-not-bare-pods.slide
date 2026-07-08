@@ -1,0 +1,20 @@
+# Why Bare Pods Aren't Enough
+
+## Two production failures
+
+- **No node survival** — Pod references one node. Node dies → phase `Unknown` → **nothing moves it**. Gone.
+- **No roll-forward** — update = delete old, create new → a **zero-Pod window** = outage.
+
+> You want: *"keep 3 of this template alive anywhere, and replace them gracefully on change."* → the **Deployment**.
+
+## The missing word: controller
+
+A program (in `kube-controller-manager`) that watches a kind and drives reality → `spec`.
+
+- **ReplicaSet** — right count exists
+- **Deployment** — manages ReplicaSets across rollouts
+- **DaemonSet** · **StatefulSet** · **Job** · **Node controller**
+
+> Every one: **read desired → observe → act → write status.** The same loop.
+
+*A bare Pod can't stand alone — it needs a controller above it.*

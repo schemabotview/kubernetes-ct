@@ -1,0 +1,9 @@
+Limit range and resource quota. Namespace governance.
+
+Once you have more than one team sharing a cluster, you do not want a best effort pod, with no limits, hogging a whole node. Nor a stray test accidentally requesting a hundred processor cores. Two cluster admin objects govern that.
+
+First, the limit range, which is namespace scoped. It does two things. It fills in defaults, so when a pod is created without requests or limits, the ay-pee-eye server fills them in. And it caps, rejecting pods whose values are outside an allowed range. So the manifest sets a default and a default request, applied when they are unset, plus a max and a min, to reject anything outside the band. After applying it, every container created in that namespace without limits gets the defaults, and anything asking for more than the max is rejected at creation.
+
+Second, the resource quota, also namespace scoped. It caps the sum, across the whole namespace, of requests, limits, and object counts. So the manifest might cap total processor requests, total memory limits, the number of pods, and the number of persistent volume claims. Once the namespace hits its budget, the next pod that would push it over is rejected at creation. Kubectl describe quota shows used versus hard.
+
+The see-kay-ay wants this distinction crisp. A limit range shapes individual objects, with defaults and per object caps. A resource quota caps the namespace total. And there is a subtle interaction. With a resource quota on requests and limits, every pod must set them. So you pair it with a limit range that supplies defaults. On our map, both live in the scheduling box, as the multi tenant guardrails around requests and limits.

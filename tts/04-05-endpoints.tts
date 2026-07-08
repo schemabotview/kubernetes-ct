@@ -1,0 +1,11 @@
+Endpoints and endpoint slices. What the service actually points at.
+
+The service object holds the selector. But the resolved list of pod addresses lives in a separate object.
+
+There are two kinds. Endpoints is the original. There is one per service, with the same name, and it lists every ready pod's address and port. Endpoint slice is the modern kind, the default since kubernetes one point twenty-one. Each slice holds up to a hundred endpoints, so a large service gets several slices. It has lower overhead at scale.
+
+Both are filled in automatically by the endpoints controller. It updates them whenever a matching pod becomes ready, stops being ready, is deleted, or when the service's selector changes. So when you read kubectl get endpoints api, you are reading the live answer to, which pod addresses is this service pointing at right now.
+
+Now, the single most common services bug. A service that shows none for its endpoints. That means no ready pods match the selector. Almost always, the cause is one of three things. The selector and the pod labels disagree, usually a typo. The pods are not ready, because of a failing probe, or a still pulling image. Or the pods are in a different namespace from the service. Kubectl describe service, then the name, shows the selector and the endpoint addresses side by side. It is the first stop when something cannot connect.
+
+You can also write a service with no selector at all, and hand author its endpoints to point at an external address. This gives an external system, like a managed database or a legacy machine, a kubernetes shaped name. Clients call the service name, and you can later swap in an in cluster deployment without touching them. On our map, endpoints are the live wire from the service chip to the pods it currently fronts.

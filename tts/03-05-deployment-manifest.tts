@@ -1,0 +1,19 @@
+Anatomy of a deployment manifest.
+
+A deployment looks almost identical to a replica set. It has the same replicas, selector, and template. Plus a few fields that govern how the controller updates pods.
+
+Let's go field by field.
+
+Replicas is the target count, the same one you saw on the replica set. The deployment passes it through to the active replica set.
+
+The selector's match labels must match the template labels. And here is a key rule. Once set, the selector is immutable on a deployment. You cannot change it after creation. That avoids the orphaned pods problem.
+
+The template is the pod template. This is the field you will change most often, usually to bump an image. Any change here triggers a rollout.
+
+The strategy type is either rolling update, the default gradual replacement, or recreate, which kills all pods and then starts all pods.
+
+Then two knobs for rolling updates. Max surge is how many extra pods the controller may create above the replica count during a rollout. Twenty five percent of four is one extra pod. And max unavailable is how many of the desired pods may be down at the same time. Twenty five percent of four is at most one down.
+
+The revision history limit is how many old replica sets to keep for rollback, defaulting to ten. And there are two more, min ready seconds, for extra confidence before a pod counts as available, and progress deadline seconds, which fails a stalled rollout.
+
+Here is the mental split. The fields you share with the replica set describe what to run. The strategy, and its knobs, describe how to change it. On our map, this manifest is the deployment chip. And the rollout fields are exactly what wire it to the rollout box that we reach next.

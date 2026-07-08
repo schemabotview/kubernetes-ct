@@ -1,0 +1,21 @@
+Imperative versus declarative.
+
+Kubectl run hello, with an image, is an imperative command. You say what to do, right now. It is fast for learning, it is fine for one off tasks, and it is accepted on the exam under time pressure. But it is not how real systems are managed.
+
+The grown up way is declarative. You write a yaml file that describes the object you want, then you ask kubernetes to make reality match it.
+
+Picture a small yaml file. It has an ay-pee-eye version of v-one, a kind of pod, some metadata with a name and a label, and a spec that lists one container running the n-ginx alpine image on container port eighty. You bring it to life with kubectl apply, dash f, then the file name.
+
+So why does declarative win for anything that is not throwaway.
+
+First, it is version controllable. The yaml lives in git, so you can diff it, review it, and roll it back.
+
+Second, it is idempotent. Run kubectl apply on the same file ten times in a row, and you still get exactly one pod. Kubectl run would error on the second attempt.
+
+Third, it is composable. A whole directory of yaml files describes a complete environment, and you bring it all up with kubectl apply, dash f, pointing at that directory.
+
+And fourth, it is reusable. Tools like helm and kustomize template these files across many environments.
+
+Now, the bridge between the two worlds, and a real time saver on the see-kay-ay exam. You can generate yaml from an imperative command. Run kubectl run, add the client dry run flag, and output as yaml, then redirect it to a file. The client dry run means, build the object but do not send it to the cluster. Output as yaml then prints it. You get a working manifest in one shot, ready to edit and apply. Most exam candidates write their yaml exactly this way. It is faster than typing from scratch, and much harder to typo.
+
+On our map, kubectl apply is the apply verb, writing your desired object into the ay-pee-eye server, which stores it in et-see-dee. It is the same declarative door that notebook two walks through, field by field.

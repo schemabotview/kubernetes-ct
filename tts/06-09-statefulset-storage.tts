@@ -1,0 +1,13 @@
+Stateful sets and volume claim templates. Per pod claims.
+
+A deployment shares one pod template across all its replicas. So if you put a persistent volume claim reference in a deployment's template, every replica mounts the same claim. And that claim is usually read write once on one node, so you cannot scale past a single replica.
+
+A stateful set fixes this. Instead of the spec volumes holding one claim reference, you write a volume claim template.
+
+So the manifest has a service name, pointing at a headless service from notebook four. It has replicas. And it has a volume claim templates section, which describes a claim named data, with an access mode and a storage request.
+
+Here is what the controller does. For each replica, it creates a claim named after the template, the stateful set, and the ordinal. So data cassandra zero, data cassandra one, and data cassandra two. Each claim binds to its own persistent volume, and each pod mounts its own claim. And crucially, if a pod is restarted or rescheduled, its claim stays. The new cassandra zero remounts the same data cassandra zero as before. Stable identity, stable storage.
+
+Deletion is deliberate. Deleting the stateful set does not delete the claims, because your data is precious. To clean up, you delete them manually, with a label selector. Kubernetes one point twenty-seven added a claim retention policy to opt in to cascade deletion. Choose deliberately.
+
+And this is why every database in kubernetes uses a stateful set. A stable name, cassandra zero. A stable network identity, cassandra zero dot cassandra, via the headless service. And stable storage, data cassandra zero. On our map, this section links the stateful set, in workload kinds, to a per pod claim, in storage. The triplet that a database replica needs.

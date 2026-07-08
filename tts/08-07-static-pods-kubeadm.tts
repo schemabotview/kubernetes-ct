@@ -1,0 +1,15 @@
+Static pods, and kube-adm. Bootstrapping a cluster.
+
+First, static pods. A static pod is one the kube-let runs directly from a manifest on disk, with no ay-pee-eye server involved. The kube-let watches a directory, by default slash etc slash kubernetes slash manifests. For each file, it reads it, starts the pod, and creates a mirror pod in the ay-pee-eye server, so that kubectl get pods can see it. The mirror is named after the pod and the node.
+
+Here is a key fact. You cannot kubectl delete a static pod. Deleting the mirror just removes it from the ay-pee-eye server's view, and the kube-let recreates it within seconds. To actually stop a static pod, you move or delete its manifest file on the node.
+
+Why does this exist. The control plane has a chicken and egg problem. You need the ay-pee-eye server to start the ay-pee-eye server. Static pods break that. On a kube-adm control plane node, the manifests directory holds et-see-dee, the ay-pee-eye server, the controller manager, and the scheduler. The kube-let boots, reads them, and brings up the control plane. Et-see-dee first, then the ay-pee-eye server, then the rest.
+
+Second, kube-adm, the canonical installer. It does not provision machines, install the operating system, or pick a network plugin. Those are your problem. Given linux machines with a runtime, and the kube-let, kube-adm, and kubectl binaries, a typical install is two commands.
+
+Kube-adm in-it, on the first control plane node. It runs preflight checks, generates the public key infrastructure, writes the static pod manifests, waits for the control plane, installs core-d-en-ess and kube proxy, and prints a join command with a token.
+
+Kube-adm join, on every other node. The kube-let uses the token to authenticate, verifies the certificate authority against a hash, and registers the node.
+
+And remember, a network plugin is your job. Until you apply one, like calico, the pods stay pending. Tokens expire in twenty four hours, and you make a new one with kube-adm token create. On our map, static pods and kube-adm build the entire control plane box, from bare metal.

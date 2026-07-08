@@ -1,0 +1,22 @@
+# Scheduler & Controller-Manager
+
+## kube-scheduler (notebook 07)
+
+> Watch `Pending` → filter → score → **bind**. Static pod; talks to api-server, never nodes.
+
+## controller-manager — ~30 loops in 1 binary
+
+| Controller | Does |
+|---|---|
+| **Node** | `NotReady` on heartbeat loss; `NoExecute` |
+| **Deployment/ReplicaSet** | rollouts; match count |
+| **DaemonSet/StatefulSet/Job/CronJob** | their Pods |
+| **Endpoints** | ready Pod IPs per Service |
+| **ServiceAccount / Namespace** | default SA · cascade delete |
+| **PV/PVC binder · HPA** | bind claims · scale |
+
+> Bundling = packaging. **Leader-elected** (lease in `kube-system`) — one active in HA.
+
+## cloud-controller-manager
+
+> Split-out cloud bits: Node · Route · **Service (LoadBalancer)**. **Not running on `kind`.**

@@ -1,0 +1,17 @@
+Why services exist.
+
+You finished notebook three with a deployment running three n-ginx pods, each with its own address. Pods come and go. Every restart, every rollout, and every scale event mints new addresses.
+
+Now you want a web pod to call your api. The web pod cannot do three things.
+
+It cannot hardcode pod addresses, because they change on every rollout.
+
+It cannot list all the pods and filter them by label, because that would mean watching the ay-pee-eye server and retrying on every change. That is a tiny custom controller inside every single client.
+
+And it cannot dee-en-ess resolve a name like api, then a random suffix, because there is no per pod dee-en-ess by default, and that name carries a random tail anyway.
+
+What every client really wants is a stable name, and a stable address, that always point at whichever api pods are alive right now. That is the service. It is a tiny piece of glue between consumers and producers.
+
+The web pod calls http colon slash slash api. Dee-en-ess resolves the name api to a stable virtual address. Kube proxy then rewrites the packet to one of the pod addresses. The web pod has no idea, and no need to know, which specific pod served the request, or that the api deployment just finished a rollout.
+
+That indirection is the entire point. The service decouples the client from the ever changing set of pods behind it. On our map, a service is the first chip in the networking box, and its job is the arrow down onto the pods it fronts.

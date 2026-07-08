@@ -1,0 +1,9 @@
+Config maps, secrets, and environment.
+
+Notebook three ran an image with the config baked in. But what you really want is one image that runs in staging with log level debug, and in prod with log level warn, that points at a swappable backend address, and that mounts the same tee-el-ess certificate into three different services. Baking config into images breaks all of that. You would ship a different, differently tested image per environment. The fix is a first class object that holds configuration, and gets referenced from pod templates.
+
+There are two such objects, with near identical schemas. A config map, for non sensitive key value config, either strings or whole files. And a secret, which is the same shape, plus a security posture. Base sixty-four storage, ram backed mounts, optional encryption at rest, and tighter are-back. Here is the key insight. Master the config map, and a secret is the same thing, plus handling.
+
+Both objects are consumed in three ways. As individual environment variables. As a bulk environment import. Or as files in a volume. And the choice you make controls whether the config live updates without a restart. We will cover both objects, immutability, image pull secrets, and the downward ay-pee-eye, which is a pod reading facts about itself.
+
+On our map, this module lives in the config box of the resources band. The config map, the secret, and the env or mount chip. Plus one reach up to the registry, for image pull secrets. The through line is this. Decouple config from the image, so that the artifact you tested is the artifact you ship.

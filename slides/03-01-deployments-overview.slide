@@ -1,0 +1,21 @@
+# Deployments, ReplicaSets & Rollouts
+
+Bare Pods **die with their node** and **can't update** without downtime. The fix: **controllers that own Pods.**
+
+## The chain to memorize
+
+```
+Deployment  →owns→  ReplicaSet  →owns→  Pods
+ (you write)        (per version)      (running copies)
+```
+
+- **ReplicaSet** — keeps `N` matching Pods alive. Great at **count**, useless at **change**.
+- **Deployment** — owns ReplicaSets (one per version). Choreographs the switch: **rolling update** + history + **one-command rollback**.
+
+## Still the reconcile loop
+
+> Edit a `spec` → a controller drives reality to match. Low count → make Pods. New template → new ReplicaSet, old one scales down.
+
+**The arc:** ReplicaSet → Deployment → scale → rollout → rollback → strategies → the workload family.
+
+> CKA gold: **Deployment → ReplicaSet → Pod**. Memorize the three layers.

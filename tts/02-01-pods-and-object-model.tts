@@ -1,0 +1,15 @@
+Pods, labels, and the object model.
+
+Notebook one ran a pod and toured the whole platform. This module opens up the object you actually create, the pod, and the model that every kubernetes object shares.
+
+Three ideas carry the whole notebook.
+
+First, every object has the same five keys. Ay-pee-eye version, kind, metadata, spec, and status. Learn them once, and no manifest ever feels foreign again. A pod, a service, a deployment, and a secret all read the very same way.
+
+Second, spec is what you want, and status is what is. You write the spec. The controllers write the status. And the gap between them is the work the cluster is always doing. That reconcile loop is kubernetes.
+
+Third, labels turn a flat list into a queryable set. Once you have more than a handful of pods, you stop naming them one by one, and you start selecting them. Everything with the label app equals web. Services, deployments, and network policies all find their pods this way.
+
+We will build the pod up field by field. Its manifest, its phases and probes, its init and sidecar containers. Then we step out to labels, selectors, annotations, and namespaces. That is the metadata layer that lets you organise thousands of objects without losing your mind.
+
+On our platform map, this whole module lives in the workloads band. The pod box, and its parts, the containers, the init containers, the sidecar, and the probes. With one detour up to the ay-pee-eye server, where the object model itself is enforced. The pod is the atom that everything else in the course is built from, and this is where we learn its anatomy.

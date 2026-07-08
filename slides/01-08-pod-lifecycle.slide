@@ -1,0 +1,25 @@
+# The Core Pod Lifecycle
+
+## The phases
+
+```
+Pending  → scheduled, pulling image, init containers
+   ↓
+Running  → ≥ 1 container up
+   ↓
+Succeeded (exit 0)   |   Failed (non-zero)
+Unknown  → node lost contact with the api-server
+```
+
+## Living with a pod
+
+- **`get pods`** — `-w` watch · `-o wide` node+IP · `-A` all namespaces
+- **`describe pod`** — events, conditions, last restart reason. The *"why is it sad"* command.
+- **`logs`** — `-f` follow · `--previous` the crashed instance
+- **`exec -it <p> -- sh`** — a shell inside; `--` splits kubectl flags from your command
+- **`port-forward <p> 8080:80`** — tunnel a local port before a Service exists
+- **`delete pod`** — bare pod stays gone; **controller-owned → replaced in seconds**
+
+## The lesson
+
+> A **bare Pod is mortal**. A **controller-managed Pod is resurrected** — desired state wins.

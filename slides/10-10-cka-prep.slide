@@ -1,0 +1,32 @@
+# CKA Strategy & Where to Go Next
+
+**2 hours · ~15–20 hands-on tasks · automated scoring.**
+
+## Time budget
+
+- **`use-context` is mandatory** — else wrong cluster.
+- **Skip-and-return** on hard tasks · save 10 min to re-check.
+
+## Aliases
+
+```bash
+alias k=kubectl
+export do='--dry-run=client -o yaml'
+export now='--grace-period=0 --force'
+```
+
+## The muscle memory
+
+```bash
+kubectl run x --image=nginx --dry-run=client -o yaml > x.yaml
+vim x.yaml && kubectl apply -f x.yaml
+```
+
+> Drill **<5 min, no docs:** Deploy+Svc · probes · RBAC · default-deny · **etcd restore** · rollout undo · drain.
+> Gotchas: **namespace · context · selector match** · `drain` (not `delete`) for PDBs.
+
+## The four ideas you own
+
+> **Declarative state · reconciling controllers · label selectors · one API server.**
+
+Next: CKAD · CKS · Gateway API · meshes. **Good luck.**

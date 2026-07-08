@@ -1,0 +1,13 @@
+Quality of service classes. Guaranteed, burstable, and best effort.
+
+Kubernetes computes each pod's quality of service class from its resource settings. You do not set it directly. And the class matters when a node runs low on memory and has to evict.
+
+There are three classes. Guaranteed, where every container sets both processor and memory requests and limits, with requests equal to limits. Burstable, where at least one request or limit is set, but the pod does not meet the guaranteed criteria. That is the eighty percent case. And best effort, where no container sets any requests or limits at all.
+
+Now, the eviction order under memory pressure. The kube-let evicts best effort pods first. Then burstable pods, prioritising those using memory above their requests. And guaranteed pods last, only if there is literally no other choice. So the cheapest insurance against eviction is to set requests equal to limits on memory. That pod is now guaranteed, and the kube-let will not touch it under normal memory pressure.
+
+Now, keep two kill mechanisms straight. Oh-oh-em killed means a single container exceeded its memory limit, so the kernel killed that process. It shows as oh-oh-em killed in the container's last state, with a rising restart count. The fix is, raise the limit, or fix the leak.
+
+Evicted means the whole pod was removed, because the node is under pressure. The pod's phase becomes failed, with reason evicted, and its controller recreates it elsewhere. The fix is, set requests, pick a less loaded node, or scale up the cluster.
+
+Kubectl describe pod tells you which one happened. On our map, quality of service is a derived property of the requests and limits chips. The same two numbers decide both scheduling, and who survives a squeeze.

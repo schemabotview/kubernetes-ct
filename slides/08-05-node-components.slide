@@ -1,0 +1,25 @@
+# Node Components
+
+Every node runs three, in coordination.
+
+## kubelet — the node agent
+
+> **Not a Pod** — a **systemd service.**
+
+1. Register the node
+2. Watch Pods bound here (`spec.nodeName`)
+3. Drive runtime: pull · netns · mount · start
+4. Probes · restart per policy
+5. Report status · **evict** on pressure
+
+> **Doesn't schedule** — runs what's **bound** to it.
+
+## kube-proxy
+
+> Service data plane — programs `iptables`/`IPVS`/`nftables`. DaemonSet. **Optional** (Cilium eBPF replaces).
+
+## Container runtime
+
+> K8s ships none — speaks **CRI** to **containerd** (common) or **CRI-O**. Docker's `dockershim` **removed in 1.24**. Socket: `/run/containerd/containerd.sock`.
+
+> = the **Node runtime** box — the *execute* half.

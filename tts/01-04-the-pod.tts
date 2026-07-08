@@ -1,0 +1,19 @@
+The pod, kubernetes' smallest unit.
+
+Here is the first thing that surprises people coming from docker. The smallest deployable thing in kubernetes is not a container. It is a pod.
+
+So what is a pod. A pod is one or more containers that share a network and a storage scope, are scheduled together onto the same node, and are treated as a single unit by kubernetes.
+
+Now for ninety five percent of pods, there is exactly one container inside. So most of the time, pod and container feel interchangeable. But the abstraction really matters because of the other five percent.
+
+Let's look at what sharing means. First, a shared network. All containers in a pod share one eye-pee address and one port space. They can talk to each other over local-host. From outside, the pod has just one address.
+
+Second, a shared storage scope. Volumes are declared on the pod, and mounted into whichever containers need them. So a helper container can write to the very same directory that the main container reads from.
+
+Third, the same node and the same lifecycle. A pod is scheduled atomically onto one node. All of its containers start there, live there, and die there together.
+
+So why bother with this wrapper at all. The pod exists for helper containers. Picture this. A sidecar is a small companion container that adds a capability, like shipping logs, or running a service mesh proxy. An init container runs once to prepare the pod before the main container starts, perhaps to fetch a config file, or to wait for a database to be ready. And the adapter and ambassador patterns are older names for sidecars that translate or proxy traffic.
+
+To put it another way. If you only have one container, the pod is just a thin wrapper. But if you have a main process plus one or two helpers that must live on the same machine and share a filesystem, then the pod is exactly the right unit.
+
+In this notebook and the next, every pod we run will have just one container, to keep the noise down. The multi container patterns show up properly from notebook two onwards. On our platform map, this is the pods box on the worker node, the thing that everything else in kubernetes ultimately serves.

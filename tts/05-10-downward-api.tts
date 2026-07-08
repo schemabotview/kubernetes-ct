@@ -1,0 +1,11 @@
+The downward ay-pee-eye. Pod metadata as environment variables or files.
+
+Sometimes a container needs to know something about itself. Its own pod name, its namespace, its address, its node, its labels, or its resource limits. None of that is in a config map or a secret. It is in the pod's own object. And the downward ay-pee-eye exposes it. There are two surfaces.
+
+The first surface is as environment variables, using field ref and resource field ref. So you might set pod name from the metadata name, pod eye-pee from the status pod eye-pee, node name from the spec node name, and a processor limit from resource field ref, with a divisor to get milli-cores.
+
+The second surface is as files in a volume, using a downward ay-pee-eye volume. You list items, each with a path and a field reference. Mount that volume, and the container reads its labels and annotations from files. This is useful when an app expects configuration, but really just wants to be told which environment it is in.
+
+The available fields include metadata name, namespace, u-eye-dee, labels, and annotations. Spec node name and service account name. And status host eye-pee, pod eye-pee, and pod eye-pees. Resource field ref gives you the processor and memory limits and requests, which is handy for sizing a j-v-m heap against the actual pod limit.
+
+On our map, this closes the config box. Alongside the config map and the secret, which project external data into a pod, the downward ay-pee-eye projects the pod's own facts into it. The same env or mount chip, in the opposite direction.

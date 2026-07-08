@@ -1,0 +1,26 @@
+# The Service Abstraction
+
+Two halves: a **stable VIP + name**, and a **label selector**.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata: { name: api }
+spec:
+  selector: { app: api }   # any Pod with this label
+  ports: [{ port: 80, targetPort: 5678 }]
+```
+
+## What's NOT there
+
+- **No Pod IPs** — zero hardcoded references
+- **No type** — defaults to `ClusterIP`
+- **No image / replicas** — a Service **routes**, runs nothing
+
+## Apply → the cluster does 3 things
+
+1. Allocates a **ClusterIP** (`10.96.0.0/12`).
+2. Registers **DNS** `api.<ns>.svc.cluster.local` → the VIP.
+3. Computes **Endpoints** → pushes to every `kube-proxy`.
+
+> The Service names a **label**, never a Pod — re-resolved live by the **endpoints controller**.

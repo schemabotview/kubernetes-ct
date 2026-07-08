@@ -1,0 +1,15 @@
+Probes. Liveness, readiness, and startup.
+
+A container can be running but not actually working. It might be deadlocked, stuck in a slow garbage collection pause, or waiting forever on a downstream service that will never come back. The container's process never exited, so the kube-let thinks all is well, but your users are seeing timeouts.
+
+Probes let the kube-let ask the container, are you actually okay. There are three kinds, and each answers a different question.
+
+The liveness probe asks, should I restart you. If it fails repeatedly, the kube-let kills and restarts the container, subject to the restart policy. Use it for the case where a container has wedged itself, and only a restart will help.
+
+The readiness probe asks, should I send you traffic. If it fails, the kube-let marks the container as not ready. The pod's ready condition flips to false, and any service in front of the pod stops sending it traffic. The container is not restarted. Use it for, I am alive but I am warming up, or I lost my database connection, or I am shedding load.
+
+The startup probe asks, are you finished booting yet. For containers that take a long time to start, it gives them a grace period. While the startup probe is still failing, the liveness and readiness probes are suspended. Once it succeeds one time, it is done, and the other probes take over.
+
+Each probe type can use one of three mechanisms. An h-t-t-p get, where a two hundred or three hundred response passes. A tee-see-pee socket, where simply opening a connection passes. Or an exec, which runs a command inside the container, and exit code zero passes.
+
+The knobs you will set are the initial delay before the first probe, the period between probes, the failure threshold, the success threshold for readiness, and the timeout per probe. The defaults are fine for most apps. The key insight for the exam. The see-kay-ay cares which probe type fits which failure mode, not the exact numbers. So remember. Liveness restarts, readiness gates traffic, and startup buys boot time. On our map, this is the probes chip in the pod box.

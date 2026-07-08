@@ -1,0 +1,13 @@
+The configuration problem.
+
+You ended notebook three with a deployment running an image that bakes in a default config. Now you want to run the same image in staging with log level debug, and in prod with log level warn. You want to point a web pod at a swappable backend address. And you want to mount one tee-el-ess certificate into three different services.
+
+Here are some options that do not work in production.
+
+Bake it into the image. You would build a web staging image and a web prod image. Different images, with different test coverage. Promotion becomes, build a new image, instead of, redeploy the same one with new config. Which means the image you tested in staging is not the image you ship to prod.
+
+Pass it on the command line. That is where you came from in the docker course. But pods are launched by the kube-let, from a template in et-see-dee, not by you at a prompt. One variable inline is fine. Twenty variables makes every deployment a wall of env entries.
+
+Stash it in a sidecar. Sometimes that is the right answer, but it is heavy for, put a value in an env var.
+
+What you really want is a first class object that holds config, lives in the cluster like any other object, and is referenced from pod templates. Two such objects exist. The config map, for non sensitive data. And the secret, for sensitive data. They have near identical schemas and consumption patterns. The differences are about handling, base sixty-four storage, encryption at rest, and are-back, not about shape. Master the config map, and the secret is the same thing plus a security posture. On our map, both are chips in the config box. The layer that keeps configuration out of the image, and in the cluster.

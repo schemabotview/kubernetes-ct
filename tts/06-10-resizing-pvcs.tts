@@ -1,0 +1,11 @@
+Resizing persistent volume claims.
+
+You requested ten gibibytes, it is full, and you want twenty. If your storage class has allow volume expansion set to true, and your see-ess-eye driver supports it, the steps are simple. You patch the claim to request the larger size, or you edit the claim directly.
+
+The controller resizes the underlying disk, then the kube-let expands the filesystem inside the pod. For most modern filesystems this is online, with no restart needed.
+
+There are a few constraints. First, you can only grow, never shrink. A smaller size is rejected by the ay-pee-eye server. Second, not every driver supports it. Kind's local path does not, but cloud drivers usually do. And third, the claim shows a filesystem resize pending condition until the filesystem side expansion completes. You can see it with kubectl describe claim.
+
+If allow volume expansion is false on the storage class, the ay-pee-eye server rejects the patch. The fix is to edit the storage class, or use a different one, and recreate the claim. Which means data migration, not a one liner. So set expansion up front.
+
+This closes the storage module. You can now provision durable storage, bind it, choose its access mode and reclaim policy, wire it into stateful sets, and grow it. On our map, that is the full storage box. Persistent volume, claim, storage class, and see-ess-eye. The durable half of the resources band, resolving onto the pods that mount it.

@@ -1,0 +1,19 @@
+Et-see-dee backup and restore. The see-kay-ay's flag bearer skill.
+
+Lose et-see-dee, lose the cluster. The see-kay-ay tests snapshot save and restore reliably. Learn it cold.
+
+First, the backup, with et-see-dee control, snapshot save. It needs four authentication pieces, and the certs live under slash etc slash kubernetes slash p-k-i slash et-see-dee. The endpoints, pointing at where et-see-dee listens. The certificate authority. A client cert that et-see-dee trusts. And the key. You run et-see-dee control snapshot save, to a file, with those four flags. A snapshot is one single file, so move it off the node. That is your backup. You can verify it with snapshot status, which shows the revision, the key count, and the hash.
+
+Second, the restore, with snapshot restore. The standard scenario is, the cluster is broken, here is a snapshot, restore it. The procedure is five steps.
+
+One, stop the control plane. Move the static pod manifests out of the manifests directory. The kube-let sees they are gone, and stops the static pods. Wait until et-see-dee and the ay-pee-eye server are down.
+
+Two, restore the snapshot to a new data directory. Do not overwrite the existing one. You run snapshot restore, with a data dir flag pointing at a fresh directory.
+
+Three, repoint et-see-dee. In the et-see-dee static pod manifest, change the data volume's host path, from the old directory to the new one.
+
+Four, restore the manifests. Move them back into the manifests directory. The kube-let starts everything, and et-see-dee boots from the snapshot.
+
+And five, verify. Kubectl get nodes, and get pods across all namespaces.
+
+Things to memorise. The et-see-dee control ay-pee-eye version three, which is the default in modern versions. The three certs, certificate authority, cert, and key. A snapshot is point in time, so anything created after it is lost on restore. And external et-see-dee is the same recipe, just with a different endpoints flag. On our map, this is the operational lifeline for the et-see-dee component. The difference between a bad hour, and a dead cluster.
