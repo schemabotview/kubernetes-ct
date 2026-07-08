@@ -1,19 +1,14 @@
 # What Docker Alone Doesn't Solve
 
-You can already build images, run containers, and `docker compose` a small stack. The gap opens with **many machines + many apps**.
+You can `docker compose` a small stack. The gap opens with **many machines + many apps**.
 
 ## The six problems Kubernetes owns
 
-- **Placement** — which container on which node? The **scheduler** decides.
-- **Self-healing** — container or node dies → replaced in seconds.
-- **Scaling** — set `replicas: 10`, the cluster converges. No SSH.
-- **Rollouts** — **rolling update**: start v2, verify, stop v1, repeat. One-command rollback.
-- **Service discovery** — a stable **Service** name + cluster DNS, not chasing pod IPs.
-- **Config & secrets** — first-class **ConfigMaps** and **Secrets**, referenced declaratively.
+- **Placement** — which container on which node? The **scheduler**.
+- **Self-healing** — container or node dies → replaced.
+- **Scaling** — set `replicas: 10`; the cluster converges.
+- **Rollouts** — start v2, verify, stop v1; one-command rollback.
+- **Service discovery** — a stable **Service** name, not pod IPs.
+- **Config & secrets** — first-class **ConfigMaps** / **Secrets**.
 
-## The division of labor
-
-- **Docker** (a runtime) still does the *actual container work*.
-- **Kubernetes** sits *on top* — the machinery that places, heals, scales, and rolls out.
-
-> The moment you have **more containers than you can supervise personally**, you want an orchestrator.
+> **Docker** (a runtime) still does the container work; **Kubernetes** sits on top — placing, healing, scaling. The moment you have **more containers than you can supervise**, you want an orchestrator.

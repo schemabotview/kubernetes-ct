@@ -6,8 +6,6 @@ A container needs facts **about itself** — Pod name, IP, node, labels, limits.
 
 ```yaml
 env:
-  - name: POD_NAME
-    valueFrom: { fieldRef: { fieldPath: metadata.name } }
   - name: POD_IP
     valueFrom: { fieldRef: { fieldPath: status.podIP } }
   - name: CPU_LIMIT
@@ -23,8 +21,4 @@ volumes:
       items: [{ path: labels, fieldRef: { fieldPath: metadata.labels } }]
 ```
 
-## Fields
-
-`metadata.name/namespace/labels` · `spec.nodeName` · `status.podIP/hostIP` · `resourceFieldRef` → `limits.cpu/memory` (size a JVM heap).
-
-> Config projects **external** data in; downward API projects the Pod's **own** facts in.
+> Fields: `metadata.*` · `spec.nodeName` · `status.podIP`; `resourceFieldRef` → `limits.cpu/memory` (size a JVM heap). Config projects **external** data in; the downward API projects the Pod's **own** facts in.

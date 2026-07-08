@@ -4,8 +4,8 @@
 
 - **ClusterIP** *(default)* — VIP, **inside only**. Every internal microservice.
 - **NodePort** — + every node's IP, `30000–32767`. Dev, bare metal.
-- **LoadBalancer** — + a **cloud LB** IP. Public cloud services. *(Pending on kind/minikube.)*
-- **ExternalName** — a **DNS CNAME**, no proxy/selector/endpoints.
+- **LoadBalancer** — + a **cloud LB** IP. Public cloud. *(Pending on kind.)*
+- **ExternalName** — a **DNS CNAME**; no proxy/selector/endpoints.
 
 ```yaml
 type: NodePort
@@ -15,9 +15,4 @@ type: ExternalName
 externalName: db.legacy.example.com
 ```
 
-| Type | Reachable from | Use for |
-|---|---|---|
-| ClusterIP | inside | internal svc |
-| NodePort | + node IPs | dev / bare metal |
-| LoadBalancer | + cloud LB | public cloud |
-| ExternalName | DNS only | alias a host |
+> In real clouds you rarely expose NodePort directly — a **LoadBalancer or Ingress** sits in front.

@@ -4,18 +4,13 @@ TLS holds the cluster together — X.509 client certs prove identity.
 
 ## Two CAs (kubeadm)
 
-- **Kubernetes CA** `/etc/kubernetes/pki/ca.crt` — front-end certs
-- **etcd CA** `/etc/kubernetes/pki/etcd/ca.crt` — etcd server/peer
-- *(+ `front-proxy-ca` — aggregation layer)*
+- **Kubernetes CA** `/etc/kubernetes/pki/ca.crt` — front-end certs (apiserver, kubelet-client, etcd-client).
+- **etcd CA** `etcd/ca.crt` — etcd server/peer. *(+ `front-proxy-ca`.)*
+- Each kubelet: `/var/lib/kubelet/pki/…` — **auto-rotated**.
 
-## Certs by role — `/etc/kubernetes/pki/`
+## kubeconfigs bundle cert + key + URL
 
-- `apiserver.crt` · `apiserver-kubelet-client.crt` · `apiserver-etcd-client.crt` · `etcd/server.crt`
-- kubelet: `/var/lib/kubelet/pki/…` — **auto-rotated**
-
-## kubeconfigs bundle cert+key+URL
-
-`admin.conf` (**never commit**) · `kubelet.conf` · `controller-manager.conf` · `scheduler.conf`
+`admin.conf` (**never commit**) · `kubelet.conf` · `controller-manager.conf` · `scheduler.conf`.
 
 ## Expiry — 1 year
 

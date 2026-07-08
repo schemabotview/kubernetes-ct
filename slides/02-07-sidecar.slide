@@ -13,12 +13,8 @@ containers:
 volumes: [{ name: logs, emptyDir: {} }]
 ```
 
-- Same file, two containers — the **volume is mounted in both**.
-- **`kubectl logs <pod> -c <container>`** — `-c` **required** with > 1 container.
-- **Shared network** — sidecar reaches the app at **`localhost:8080`**, no DNS.
+- Same file, two containers — **volume mounted in both**.
+- **`kubectl logs <pod> -c <container>`** — `-c` required with >1 container.
+- **Shared network** — sidecar reaches app at **`localhost`**, no DNS.
 
-## When NOT to
-
-> Two services that call each other over the network → **separate Pods behind a Service**. Co-locate only when they share node + lifecycle + storage.
-
-*Classic mistake: web app + its database in one Pod.*
+> Two services calling each other → **separate Pods behind a Service.** *Classic mistake: app + DB in one Pod.*

@@ -3,32 +3,18 @@
 Each rollout = a new ReplicaSet = a numbered revision.
 
 ```bash
-kubectl rollout history deployment/web
+kubectl rollout history deployment/web           # list revisions
 kubectl rollout history deployment/web --revision=2
 ```
 
 ## Roll back — one command
 
 ```bash
-kubectl rollout undo deployment/web
+kubectl rollout undo deployment/web              # previous revision
 kubectl rollout undo deployment/web --to-revision=1
 ```
 
-> `undo` is **just another rollout** — makes a *new* revision matching the old template. After undo: revisions 1, 2, **3** (3 = 1).
+> `undo` is **just another rollout** — a *new* revision matching the old template. After undo: 1, 2, **3** (3 = 1).
 
-## Pause / resume — batch risky changes
-
-```bash
-kubectl rollout pause deployment/web
-# ...several edits...
-kubectl rollout resume deployment/web   # ships as ONE rollout
-```
-
-## Breadcrumbs
-
-```bash
-kubectl annotate deployment/web \
-  kubernetes.io/change-cause="bump nginx 1.28 (CVE)"
-```
-
-> The **history of ReplicaSets** makes "go back to last week" one command.
+- **Pause / resume** — `rollout pause` → batch edits → `rollout resume` ships them as **one** rollout.
+- **Breadcrumbs** — set the `kubernetes.io/change-cause` annotation to label each revision.

@@ -4,25 +4,18 @@
 
 ```yaml
 sessionAffinity: ClientIP
-sessionAffinityConfig:
-  clientIP: { timeoutSeconds: 10800 }   # 3h
+sessionAffinityConfig: { clientIP: { timeoutSeconds: 10800 } }
 ```
 
-> Hash by source IP → pin to one Pod. **Only** mode offered. *Breaks behind NAT* — internal use only. Cookie/JWT → Ingress/mesh.
+> Hash by source IP → pin to one Pod. The **only** mode. *Breaks behind NAT* — internal only; cookie/JWT → Ingress/mesh.
 
-## Multi-port — each port **named**
+## Multi-port
 
-```yaml
-ports:
-  - { name: http, port: 80, targetPort: 8080 }
-  - { name: grpc, port: 9090, targetPort: 9090 }
-```
+> One Service, several ports — **each must be named** (`name: http`, `name: grpc`).
 
 ## Service (L4) vs Ingress (L7)
 
-| Layer | Object | Speaks |
-|---|---|---|
-| L4 | Service | TCP/UDP, selector |
-| L7 | Ingress + controller | host/path, TLS |
+- **Service** — TCP/UDP, selector-based.
+- **Ingress + controller** — HTTP host/path routing, TLS.
 
-> **Service = the primitive.** Ingress/mesh use Services to find Pods, then add smarter routing. → notebook 09.
+> **Service = the primitive.** Ingress/mesh use Services to find Pods, then add smarter routing → notebook 09.

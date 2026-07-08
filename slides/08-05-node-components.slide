@@ -20,6 +20,4 @@ Every node runs three, in coordination.
 
 ## Container runtime
 
-> K8s ships none — speaks **CRI** to **containerd** (common) or **CRI-O**. Docker's `dockershim` **removed in 1.24**. Socket: `/run/containerd/containerd.sock`.
-
-> = the **Node runtime** box — the *execute* half.
+> K8s ships none — speaks **CRI** to **containerd** or **CRI-O**. Docker's `dockershim` **removed in 1.24**. These three = the **Node runtime** box, the *execute* half.

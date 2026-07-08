@@ -3,23 +3,17 @@
 ## The phases
 
 ```
-Pending  → scheduled, pulling image, init containers
-   ↓
-Running  → ≥ 1 container up
-   ↓
-Succeeded (exit 0)   |   Failed (non-zero)
-Unknown  → node lost contact with the api-server
+Pending → Running → Succeeded (exit 0) | Failed (non-zero)
+Unknown → node lost contact with the api-server
 ```
 
 ## Living with a pod
 
-- **`get pods`** — `-w` watch · `-o wide` node+IP · `-A` all namespaces
-- **`describe pod`** — events, conditions, last restart reason. The *"why is it sad"* command.
+- **`get pods`** — `-w` watch · `-o wide` node+IP · `-A` all ns
+- **`describe pod`** — events + last restart reason (*"why is it sad"*)
 - **`logs`** — `-f` follow · `--previous` the crashed instance
-- **`exec -it <p> -- sh`** — a shell inside; `--` splits kubectl flags from your command
-- **`port-forward <p> 8080:80`** — tunnel a local port before a Service exists
-- **`delete pod`** — bare pod stays gone; **controller-owned → replaced in seconds**
+- **`exec -it <p> -- sh`** — a shell inside (`--` splits flags)
+- **`port-forward <p> 8080:80`** — tunnel before a Service exists
+- **`delete pod`** — bare → gone; controller-owned → **replaced**
 
-## The lesson
-
-> A **bare Pod is mortal**. A **controller-managed Pod is resurrected** — desired state wins.
+> A **bare Pod is mortal**; a **controller-managed Pod is resurrected** — desired state wins.

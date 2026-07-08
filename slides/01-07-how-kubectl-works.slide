@@ -1,26 +1,21 @@
 # How `kubectl` Actually Works
 
-`kubectl` is one binary on your laptop. It **doesn't run Pods** — it builds objects and sends them to the api-server.
+One binary. It **doesn't run Pods** — it builds objects and sends them to the api-server.
 
 ```
 kubectl  --HTTPS-->  kube-apiserver  -->  etcd
- reads               authn · authz
- ~/.kube/config      validate · write
+ (~/.kube/config)    authn·authz·validate
 ```
 
 ## Four things to lock in
 
-- **Stateless** — reads `~/.kube/config` for URL + credentials. That file *is* cluster access.
-- **api-server is the only writer** — scheduler, kubelet, controllers all go through it; none touch etcd.
-- **Auth at the door** — *who* = your credential; *what* = **RBAC** (notebook 10).
-- **Watch, don't poll** — components stream "tell me when X changes" and react.
+- **Stateless** — `~/.kube/config` *is* cluster access.
+- **api-server = the only writer** — everything else goes through it.
+- **Auth at the door** — *who* = credential; *what* = **RBAC**.
+- **Watch, don't poll** — components stream changes and react.
 
 ## Anatomy of a command
 
-```
-kubectl <verb> <resource> [name] [flags]
-```
+`kubectl <verb> <resource> [name] [flags]`
 
-- `kubectl get pods` · `describe pod hello` · `logs hello` · `exec -it hello -- sh`
-- **Aliases** — `po` = `pods`; see `kubectl api-resources`.
-- **`-n <ns>`** one namespace · **`-A`** all · **`-o wide|yaml|json`** output.
+> `po`=`pods` (`api-resources`) · **`-n`** one ns · **`-A`** all · **`-o wide|yaml`** output.

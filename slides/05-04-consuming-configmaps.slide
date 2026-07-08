@@ -26,10 +26,4 @@ volumes:
   - name: cfg
     configMap: { name: app-file }
 ```
-*App reads a file (`--config /path`).*
-
-| App reads | Use |
-|---|---|
-| a few env vars | `configMapKeyRef` |
-| many from one source | `envFrom` |
-| a file / live-update | **volume mount** |
+*App reads a file — and it can **live-update** (next).*

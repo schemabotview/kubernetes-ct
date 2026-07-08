@@ -14,14 +14,8 @@ rules:
     verbs: ["get", "list", "watch"]
 ```
 
-## Each rule: 3 parts
-
 - **apiGroups** — `""` core · `apps` · `batch` · `networking.k8s.io`
-- **resources** — plural; sub `pods/exec`, `deployments/scale`
-- **verbs** — get/list/watch/create/update/patch/delete · `*` `impersonate`
-
-> exec/logs → `get` on `pods/exec`, `pods/log`.
-
-## The rule that matters
+- **resources** — plural; sub `pods/exec` (exec/logs → `get` on `pods/exec`, `pods/log`)
+- **verbs** — get/list/watch/create/update/patch/delete · `*`
 
 > **RBAC is additive — no deny.** Remove a permission = **delete the binding**.

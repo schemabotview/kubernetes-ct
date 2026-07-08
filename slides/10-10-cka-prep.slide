@@ -2,28 +2,18 @@
 
 **2 hours · ~15–20 hands-on tasks · automated scoring.**
 
-## Time budget
-
-- **`use-context` is mandatory** — else wrong cluster.
-- **Skip-and-return** on hard tasks · save 10 min to re-check.
-
-## Aliases
-
-```bash
-alias k=kubectl
-export do='--dry-run=client -o yaml'
-export now='--grace-period=0 --force'
-```
+- **`use-context` is mandatory** — else you fix the wrong cluster.
+- **Skip-and-return** on hard tasks; save 10 min to re-check.
 
 ## The muscle memory
 
 ```bash
+alias k=kubectl
 kubectl run x --image=nginx --dry-run=client -o yaml > x.yaml
 vim x.yaml && kubectl apply -f x.yaml
 ```
 
-> Drill **<5 min, no docs:** Deploy+Svc · probes · RBAC · default-deny · **etcd restore** · rollout undo · drain.
-> Gotchas: **namespace · context · selector match** · `drain` (not `delete`) for PDBs.
+> Drill **<5 min, no docs:** Deploy+Svc · probes · RBAC · default-deny · **etcd restore** · rollout undo · drain. Gotchas: **namespace · context · selector match** · `drain` (not `delete`) for PDBs.
 
 ## The four ideas you own
 

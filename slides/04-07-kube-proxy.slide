@@ -1,21 +1,16 @@
 # How kube-proxy Routes Traffic
 
-The ClusterIP is a **fiction** — nothing listens on `10.96.42.7`. **kube-proxy** makes it real.
-
-> DaemonSet on every node → watches Services + Endpoints → programs the **kernel** so Service IP → a real Pod IP.
+The ClusterIP is a **fiction** — nothing listens on `10.96.42.7`. **kube-proxy** makes it real: a DaemonSet on every node that programs the **kernel** so Service IP → a real Pod IP.
 
 ## Three modes
 
-- **iptables** *(default)* — DNAT to a random endpoint. Simple; rules grow with scale.
-- **IPVS** — kernel IP Virtual Server; hash lookup, richer algorithms. Faster at scale.
+- **iptables** *(default)* — DNAT to a random endpoint; rules grow with scale.
+- **IPVS** — kernel hash lookup, richer algorithms. Faster at scale.
 - **nftables** — modern filter framework; the future.
 
-## Day to day
+## The misconception to kill
+
+> kube-proxy is **NOT** in the data path. It writes **rules**; packets flow **kernel-direct, Pod→Pod**. Service IPs are free at runtime.
 
 - **Debug** — `iptables -t nat -L -n` on a node.
 - **Mesh** — Istio/Linkerd intercept *before* kube-proxy, on top of it.
-- **Scale** — past a few thousand Services → IPVS / nftables.
-
-## Kill the misconception
-
-> kube-proxy is **NOT** in the data path. It writes **rules**; packets flow **kernel-direct, Pod→Pod**. Service IPs are free at runtime.

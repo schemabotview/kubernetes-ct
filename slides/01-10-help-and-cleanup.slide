@@ -4,21 +4,19 @@ Don't memorise flags — Kubernetes ships its own reference.
 
 ## Built-in help
 
-- **`kubectl --help`** — top-level commands
-- **`kubectl <verb> --help`** — flags for one verb
-- **`kubectl explain pod.spec.containers`** — object fields, **offline**. The API ref on disk.
-- **`kubectl api-resources`** — every kind, short name, namespaced?
+- **`kubectl <verb> --help`** — flags for a verb
+- **`kubectl explain pod.spec.containers`** — object fields, **offline**
+- **`kubectl api-resources`** — every kind + short name
 
-> **CKA is open-book** against **kubernetes.io/docs**. Flow when stuck: `explain` → `--help` → docs.
+> **CKA is open-book** against **kubernetes.io/docs**. Stuck → `explain` → `--help` → docs.
 
 ## Cleaning up
 
-- **Targeted** — `kubectl delete pod <name>` · `kubectl delete -f pod.yaml`
-- **Bulk** — `kubectl delete <kind> --all` *(careful — it really deletes)*
-- **The whole cluster** — `kind delete cluster --name learn`
+- **Targeted** — `kubectl delete pod <name>` / `-f pod.yaml`
+- **Bulk** — `kubectl delete <kind> --all` *(careful!)*
 
 ```bash
-kind delete cluster --name learn   # gone in seconds
+kind delete cluster --name learn   # whole cluster, gone in seconds
 ```
 
-> Throwaway clusters are the point of `kind`: break it, delete it, recreate it.
+> Throwaway clusters are the point of `kind`: break it, recreate it.

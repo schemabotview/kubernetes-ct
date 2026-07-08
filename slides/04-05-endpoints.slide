@@ -1,22 +1,16 @@
 # Endpoints & EndpointSlices
 
-Service holds the **selector**. The **resolved Pod IPs** live in a separate object.
+Service holds the **selector**; the **resolved Pod IPs** live in a separate object.
 
 - **`Endpoints`** — original, one per Service, same name.
-- **`EndpointSlice`** — modern (≥1.21), ≤100 per slice, low overhead at scale.
+- **`EndpointSlice`** — modern (≥1.21), ≤100 per slice, scales better.
 
-> Filled in by the **endpoints controller** when Pods go Ready / not-Ready / deleted. `kubectl get endpoints api` = the live answer.
+> Filled by the **endpoints controller** as Pods go Ready / not-Ready. `kubectl get endpoints api` = the live answer.
 
 ## The #1 Services bug
 
-> `endpoints: <none>` → **no ready Pod matches the selector.**
-
-- selector ≠ Pod labels (typo)
-- Pods not ready (probe / pulling)
-- Pods in another namespace
-
-`kubectl describe service <n>` — selector + addresses side by side.
+> `endpoints: <none>` → **no ready Pod matches the selector** — a label typo, unready Pods, or wrong namespace. `kubectl describe service` shows selector + addresses.
 
 ## No-selector Service
 
-> Hand-write `Endpoints` → a **Kubernetes name for an external IP** (RDS, legacy VM). Swap in-cluster later, clients unchanged.
+> Hand-write `Endpoints` → a **Kubernetes name for an external IP** (RDS, legacy VM); swap in-cluster later, clients unchanged.

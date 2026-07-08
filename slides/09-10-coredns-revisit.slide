@@ -8,8 +8,7 @@ Deployment in `kube-system`. Default is fine for 95% — here's the 5%.
 .:53 {
   kubernetes cluster.local ...  # Service DNS (reads API server)
   forward . /etc/resolv.conf    # else → node upstream
-  cache 30
-  reload                        # re-read on change
+  cache 30 ; reload             # re-read on change
 }
 ```
 
@@ -19,16 +18,10 @@ Deployment in `kube-system`. Default is fine for 95% — here's the 5%.
 corp.internal:53 { forward . 10.0.0.10 }
 ```
 
-## Per-pod DNS
+## Per-pod DNS + the `ndots` trap
 
 ```yaml
 dnsPolicy: None
-dnsConfig:
-  nameservers: [8.8.8.8]
-  options: [{ name: ndots, value: "2" }]
+dnsConfig: { nameservers: [8.8.8.8], options: [{ name: ndots, value: "2" }] }
 ```
-> `dnsPolicy`: `ClusterFirst` (def) · `Default` · `None` · `ClusterFirstWithHostNet`.
-
-## `ndots` trap
-
 > Default **`ndots: 5`** → `curl google.com` fires **4 failing** lookups first. Perf → `ndots: 2`.

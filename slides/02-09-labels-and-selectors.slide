@@ -15,8 +15,6 @@ metadata:
 - **Equality** — `app=web` · `tier!=frontend` · `a=b,c=d` (**AND**, *no OR*)
 - **Set-based** — `env in (prod,staging)` · `notin` · `release` (exists) · `!release`
 
-Used **everywhere**: `-l`, Service `spec.selector`, Deployment `spec.selector`, NetworkPolicy `podSelector`.
+Used **everywhere**: `-l`, Service/Deployment `spec.selector`, NetworkPolicy `podSelector`.
 
-## The deep point
-
-> A selector is a **loose, live query**, not a foreign key. "Any Pod with `app=web`" — re-resolved every moment. **That's what makes rolling updates possible.**
+> A selector is a **loose, live query**, not a foreign key — "any Pod with `app=web`", re-resolved every moment. **That's what makes rolling updates possible.**

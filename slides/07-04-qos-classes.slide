@@ -2,21 +2,17 @@
 
 Computed from resources (you don't set it). Decides **eviction order**.
 
-| Class | Qualifies |
-|---|---|
-| **Guaranteed** | every container: CPU+mem, **requests == limits** |
-| **Burstable** | some request/limit, not Guaranteed (80%) |
-| **BestEffort** | **no** requests/limits at all |
+- **Guaranteed** — every container sets CPU+mem, **requests == limits**.
+- **Burstable** — some request/limit set, not Guaranteed (the 80%).
+- **BestEffort** — **no** requests/limits at all.
 
 ## Eviction under memory pressure
 
-> **BestEffort** → **Burstable** (over requests) → **Guaranteed** last.
-
-> Cheapest insurance: **`requests == limits` on memory** → Guaranteed → left alone.
+> **BestEffort** → **Burstable** (over requests) → **Guaranteed** last. Cheapest insurance: **`requests == limits` on memory** → Guaranteed, left alone.
 
 ## OOMKilled vs Evicted
 
-- **OOMKilled** — one **container** over its **limit**; kernel kills it. `restartCount`↑. Fix: **raise limit / fix leak.**
-- **Evicted** — whole **Pod** off a pressured **node**. Phase `Failed`. Fix: **set requests / scale.**
+- **OOMKilled** — one **container** over its **limit**; kernel kills it. Fix: **raise limit / fix leak.**
+- **Evicted** — whole **Pod** off a pressured **node**. Fix: **set requests / scale.**
 
 > `kubectl describe pod` tells you which.

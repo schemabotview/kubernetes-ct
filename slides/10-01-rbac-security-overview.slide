@@ -5,13 +5,12 @@ The final module: **lock it down** + **fix it** — what the CKA weighs most.
 ## Security
 
 - **Identity** — Users (people, *not* objects) vs **ServiceAccounts** (Pods, real objects).
-- **RBAC** — `Role`/`ClusterRole` bound by `RoleBinding`/`ClusterRoleBinding`. **Additive, no deny.** `auth can-i`.
-- **Hardening** — **security context** (non-root, drop caps, read-only fs) · **PSA** per namespace · **etcd encryption** · supply chain.
+- **RBAC** — `Role`/`ClusterRole` bound to subjects. **Additive, no deny.** `auth can-i`.
+- **Hardening** — security context · **PSA** per namespace · **etcd encryption** · supply chain.
 
 ## Troubleshooting (~30% of exam)
 
-> Broken cluster → you fix it. Failure modes + first commands:
-> **App** (`Pending`, `CrashLoop`) · **Control plane + node** (`NotReady`) · **Networking**.
+> Broken cluster → you fix it. Know the failure modes + first command: **App** · **Control plane + node** · **Networking**.
 
 ## CKA strategy
 

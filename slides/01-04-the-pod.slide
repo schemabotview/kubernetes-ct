@@ -1,23 +1,17 @@
 # The Pod — the Smallest Unit
 
-The surprise from Docker: Kubernetes' smallest unit is **not a container** — it's a **Pod**.
-
-## Definition
-
-> One or more containers that **share a network and storage scope**, scheduled **together** onto **one node**, treated as a **single unit**.
-
-95% of Pods hold exactly one container — so Pod ≈ container *most* of the time. The abstraction earns its keep on the other 5%.
+Kubernetes' smallest unit is **not a container** — it's a **Pod**: one or more containers **sharing a network + storage scope**, scheduled **together** onto **one node**.
 
 ## What "shared" buys you
 
-- **Shared network** — one IP + port space; containers reach each other on `localhost`.
-- **Shared storage** — Pod-level volumes mounted into whichever container needs them.
-- **Shared lifecycle** — scheduled atomically to one node; start and die together.
+- **Network** — one IP + port space; reach each other on `localhost`.
+- **Storage** — Pod-level volumes mounted into any container.
+- **Lifecycle** — scheduled atomically; start and die together.
 
 ## The 5% — helper containers
 
 - **sidecar** — adds a capability (log shipper, mesh proxy)
-- **initContainer** — runs *once* to prepare the Pod (fetch config, wait for DB)
+- **initContainer** — runs *once* to prepare the Pod
 - **adapter / ambassador** — translate or proxy traffic
 
-> One container = a thin wrapper. Main + helpers that must co-locate = the Pod.
+> 95% of Pods hold one container (Pod ≈ container). The abstraction earns its keep on the other 5%.

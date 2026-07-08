@@ -11,19 +11,14 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate: { maxSurge: 25%, maxUnavailable: 25% }
-  revisionHistoryLimit: 10
   template:
     metadata: { labels: { app: web } }
     spec:
       containers: [{ name: app, image: nginx:1.27-alpine }]
 ```
 
-## The fields that matter
-
 - **`selector`** — matches template labels, **immutable** once set.
 - **`template`** — you edit this most; **any change → a rollout**.
-- **`strategy.type`** — `RollingUpdate` (default) | `Recreate`.
-- **`maxSurge`** — extra Pods *above* replicas · **`maxUnavailable`** — how many down.
-- **`revisionHistoryLimit`** — old RSs kept for rollback (10).
+- **`maxSurge`** extra above replicas · **`maxUnavailable`** how many down.
 
 > Shared fields = **what to run**. `strategy` = **how to change it**.

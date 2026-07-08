@@ -16,17 +16,8 @@ spec:
       containers: [{ name: app, image: nginx:1.27-alpine }]
 ```
 
-## The loop
+- **The loop** — count matching Pods → too few? create → too many? delete → forever.
+- **Selector = template labels** — mismatch → makes Pods it can't see (rejected at admission).
+- **Self-healing** — delete an owned Pod → replacement in **seconds**.
 
-> count matching Pods → **too few?** create → **too many?** delete → forever.
-
-## Two footguns / facts
-
-- **Selector = template labels** — mismatch → creates Pods it can't see → infinite loop. Rejected at admission.
-- **`ownerReferences`** — owned Pods point back; **deletes cascade**.
-
-## Self-healing
-
-> Delete an owned Pod → replacement in **seconds**, new name. The reconcile loop, live.
-
-*But you rarely write one directly → next section.*
+> Great at *count*, useless at *change* → you rarely write one directly.

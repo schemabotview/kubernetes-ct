@@ -1,26 +1,19 @@
 # Getting a Local Cluster
 
-You learn Kubernetes by **running Pods** — so you need a cluster. Four options, simplest first.
+You learn Kubernetes by **running Pods** — so you need a cluster.
 
 ## The options
 
-- **`kind`** — Kubernetes IN Docker. Each node is a container. Boots < 1 min, easy reset. **Use this for notebooks 01–07.**
-- **`minikube`** — single node in a VM/container, bundled add-ons. Forgiving, slower.
-- **Docker Desktop** — a settings checkbox: *Enable Kubernetes*. Zero installs, not latest.
-- **`kubeadm` on VMs** — the *real* install. Matches production, what **CKA** expects. **Notebook 08.**
+- **`kind`** — Kubernetes IN Docker. Boots < 1 min. **Use for 01–07.**
+- **`minikube`** — single node in a VM; forgiving, slower.
+- **Docker Desktop** — a checkbox. Zero installs, not latest.
+- **`kubeadm` on VMs** — the *real* install; what **CKA** expects (nb 08).
 
 ## Spin one up
 
 ```bash
-brew install kind
-kind create cluster --name learn
-brew install kubectl        # the client that talks to it
+brew install kind && kind create cluster --name learn
+brew install kubectl
 ```
 
-## Verify — three commands
-
-- `kubectl version` — client **and** server → kubectl reaches the api-server.
-- `kubectl cluster-info` — api-server URL + add-ons.
-- `kubectl get nodes` — one node: `learn-control-plane`.
-
-> A local cluster = the whole **Cluster** column on one node (control plane **and** worker).
+> Verify: `kubectl version` (client **and** server), `cluster-info`, `get nodes`. A local cluster = the whole **Cluster** column on one node.

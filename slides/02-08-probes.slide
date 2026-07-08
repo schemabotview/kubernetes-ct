@@ -1,12 +1,12 @@
 # Probes — Liveness · Readiness · Startup
 
-A container can be **running but not working** — deadlocked, GC-stalled, downstream dead. Probes ask *"are you actually OK?"*
+A container can be **running but not working** — deadlocked, GC-stalled. Probes ask *"are you OK?"*
 
 ## Three probes, three questions
 
-- **Liveness** — *"restart you?"* fail → **kill + restart**. For wedged containers.
-- **Readiness** — *"send traffic?"* fail → **not ready**, Service **stops routing**. *Not restarted.* For warming up / lost DB.
-- **Startup** — *"booted yet?"* grace period; **suspends liveness + readiness** until it passes once.
+- **Liveness** — *"restart you?"* fail → **kill + restart**.
+- **Readiness** — *"send traffic?"* fail → **not ready**, Service **stops routing**. *Not restarted.*
+- **Startup** — *"booted yet?"* grace period; suspends the others until it passes once.
 
 ## Three mechanisms
 
@@ -16,6 +16,4 @@ tcpSocket: { port: 5432 }                  # connect?
 exec:      { command: ["sh","-c","test -f /tmp/ok"] }  # exit 0
 ```
 
-Knobs: `initialDelaySeconds` · `periodSeconds` · `failureThreshold` · `successThreshold`.
-
-> **CKA cares which type for which failure** — not the numbers. *Liveness restarts · readiness gates traffic · startup buys boot time.*
+> **CKA cares which type for which failure**, not the numbers: *liveness restarts · readiness gates traffic · startup buys boot time.*

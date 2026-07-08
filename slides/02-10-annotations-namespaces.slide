@@ -2,11 +2,10 @@
 
 ## Annotations — the other metadata
 
-Labels *select*; **annotations describe**. Same shape, no length limit, **selectors ignore them**.
+Labels *select*; **annotations describe**. No length limit, **selectors ignore them**.
 
 ```yaml
 annotations:
-  owner: platform-team@example.com
   git-commit: abc123def
   nginx.ingress.kubernetes.io/rewrite-target: /
 ```
@@ -15,12 +14,11 @@ annotations:
 
 ## Namespaces — soft tenancy
 
-Scope names: `default/web` ≠ `staging/web`. Most kinds namespaced; Nodes/PVs/StorageClasses/ClusterRoles are cluster-scoped.
+Scope names: `default/web` ≠ `staging/web`. (Nodes/PVs/ClusterRoles are cluster-scoped.)
 
-**Give you:** name scope · RBAC target · quota target · DNS `<svc>.<ns>.svc.cluster.local`
-**Do NOT give you:** network isolation (→ NetworkPolicy) · strong tenancy
-
-Built-ins: `default` · `kube-system` · `kube-public` · `kube-node-lease`
+- **Give:** name scope · RBAC target · quota target · DNS `<svc>.<ns>.svc…`
+- **Don't give:** network isolation (→ NetworkPolicy) · strong tenancy
+- Built-ins: `default` · `kube-system` · `kube-public` · `kube-node-lease`
 
 ```bash
 kubectl config set-context --current --namespace=team-a
