@@ -19,8 +19,7 @@
           "notebook": "notebooks/01-02-orchestration-problem.ipynb",
           "slide": "slides/01-02-orchestration-problem.slide",
           "audio": "audio/01-02-orchestration-problem.wav",
-          "scene": "kubernetes",
-          "focus": "k8s-cluster",
+          "scene": "orchestration",
           "spine": true
         },
         {
